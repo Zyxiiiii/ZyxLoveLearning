@@ -1,4 +1,4 @@
-package List;
+package Collections;
 
 import java.security.spec.RSAOtherPrimeInfo;
 import java.util.*;
