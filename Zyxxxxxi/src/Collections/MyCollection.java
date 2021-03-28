@@ -12,15 +12,17 @@ public class MyCollection {
     public static LinkedList<Double> linkedList = new LinkedList<Double>();
     public static HashSet<String> hashSet = new HashSet<String>();
 
-    public static void main(String[] args) {
-        learnArrayList();
-        learnLinkedList();
-        learnHashSet();
+    /*
+     *      public static TreeSet<Float> treeSet = new TreeSet<Float>();
+     *      TreeSet的方法大致都与HashSet一致，区别在于构造器。
+     *  TreeSet构造器：
+     *      new TreeSet();      无参构造，元素按自然顺序进行排序
+     *      new TreeSet(Comparator comparator);     传入比较器作为参数的带参构造，元素按比较器进行比较。
+     *                                          并且比较器compareTo()中的值为正数是为正序，否则为逆序
+     * */
 
-    }
     /**ArrayList*/
     public static void learnArrayList(){
-
         System.out.println("=========================");
         System.out.println("ArrayList");
         System.out.println("增加并获取元素");
@@ -151,4 +153,5 @@ public class MyCollection {
             System.out.println("此时集合不为空");
         }
     }
+
 }
