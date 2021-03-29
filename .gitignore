@@ -1,0 +1,7 @@
+#Git ignore list#
+/JavaLearn/.gitignore
+/out/
+/Zyxxxxxi/*.iml
+!*.java
+/.git/
+/.idea/
