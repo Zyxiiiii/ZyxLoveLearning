@@ -1,5 +1,5 @@
 #Git ignore list#
-/JavaLearn/.gitignore
+.gitignore
 /out/
 /Zyxxxxxi/*.iml
 !*.java
