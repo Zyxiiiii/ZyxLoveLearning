@@ -1,5 +1,4 @@
 #Git ignore list#
-.gitignore
 /out/
 /Zyxxxxxi/*.iml
 !*.java
