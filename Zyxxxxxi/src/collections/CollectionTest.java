@@ -1,9 +1,12 @@
-package Collections;
+package collections;
+
+import collections.MyCollection;
+import collections.MyMaps;
 
 /**
  * @author zyx
  */
-public class Test {
+public class CollectionTest {
     public static void main(String[] args) {
 
         //Collections

@@ -481,7 +481,7 @@ public static int getMaxNum(){
 类的行为：成员方法（与普通的方法相比，成员方法不需要加static修饰符）
 
 ```java
-public class Test{
+public class collections.CollectionTest{
     //成员变量
     数据类型 变量1；
     数据类型 变量2；
@@ -510,7 +510,7 @@ public class Test{
 ```java
 public static void main(String[] args){
     //创建对象
-    Test test = new Test();
+    collections.CollectionTest test = new collections.CollectionTest();
     //使用对象
     test.number = /*变量值*/
     test.getMax();
@@ -1004,7 +1004,7 @@ for(Map.Entry<String,String> me : entrySet){
 //增强for循环获取键值并输出
 ```
 
-## Collections
+## collections
 
 Collections是对集合进行操作的多态算法，简而言之，它是一个针对集合使用的工具类（所有方法均为静态方法）
 
@@ -1147,7 +1147,7 @@ public class Son extends Father{ }
 * 包的定义格式：package 包名（多级包用“.”区分开）
 
 ```java
-package zyx-lqq.zyx.Java.Test
+package zyx-lqq.zyx.Java.collections.CollectionTest
 ```
 
 ## 导包
@@ -1729,7 +1729,7 @@ throw new xxxxxxException("*/需要给出的提示信息/*")
 例：
 
 ```java
-public class Test<E> { }
+public class collections.CollectionTest<E> { }
 ```
 
 *Tips：E为任意标识，用于表示泛型，常见的有T、E、K、V*
@@ -1817,11 +1817,11 @@ File是文件和目录路径名的**抽象表示**
 
 ### File类的构造方法
 
-|              方法名               |                           说明                           |
-| :-------------------------------: | :------------------------------------------------------: |
-|       File(String pathname)       | 通过给定的路径名字符串转换为抽象路径名来创建新的File实例 |
-| File(String parent, String child) |     从父路径名字符串和子路径名字符串创建新的File实例     |
-|  File(File parent, String child)  |      以父抽象路径名和子路径名字符串创建新的File实例      |
+|               方法名                |                           说明                           |
+| :---------------------------------: | :------------------------------------------------------: |
+|        File(String pathname)        | 通过给定的路径名字符串转换为抽象路径名来创建新的File实例 |
+|  File(String parent, String child)  |     从父路径名字符串和子路径名字符串创建新的File实例     |
+| File(**File parent**, String child) |      以父抽象路径名和子路径名字符串创建新的File实例      |
 
 ```java
 1. File f1 = new File("C:\\xxx\\xx.txt");
@@ -1934,7 +1934,7 @@ File是文件和目录路径名的**抽象表示**
 
   * 在文件中追加数据
 
-    * public FileOutpueStream(String name, boolean append)
+    * public FileOutputStream(String name, boolean append)
 
       ​	当append为true时，直接在文件末尾写入数据而不是开头
 
@@ -1948,7 +1948,7 @@ File是文件和目录路径名的**抽象表示**
 
 1. 创建字节输入流对象
 2. 调用字节输入流对象的读数据方法
-   1. 利用(int )read( )方法，一次读取一个数据，并且当数据达到文件末尾，它的返回值是-1（利用循环读取文档中的所有数据）
+   1. 利用(int)read( )方法，一次读取一个数据，并且当数据达到文件末尾，它的返回值是-1（利用循环读取文档中的所有数据）
 3. 释放资源
 
 #### 字节缓冲流
