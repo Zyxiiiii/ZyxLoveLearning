@@ -68,7 +68,7 @@ group by：用于将表格按group by后跟的字段进行分组
 
 *可以使用多个字段进行分组，**但使用了group by的语句select后只能跟分组函数或分组条件字段***
 
-having：对分组后的字段进行进一步过滤（不能不使用group by直接使用having
+having：对分组后的字段进行进一步过滤（不能不使用group by直接使用having）
 
 distinct（去重）：去除重复记录
 
@@ -97,6 +97,8 @@ distinct（去重）：去除重复记录
 
 ##### 内连接
 
+假设A表和B表进行连接，凡是A、B表中的数据都查询出来，这就是内连接，A、B两张表没有主副之分，两张表是平等的
+
 * 等值连接
 
   ​		连接条件中的关系为等量关系
@@ -109,10 +111,25 @@ distinct（去重）：去除重复记录
 
   ​		表格自己连接本身
 
-##### 外连接
+select a.name, b.ename from emp a **(inner) join** emp b **on** a.mgr = b.empno 
+
+##### 外连接(开发运用较多)
+
+假设A表和B表进行连接，A、B两表中有主副之分，查询主要针对主表中的数据，捎带着查询副表，并且当副表中没有数据与主表匹配时，会在自动模拟出null与主表进行匹配
+
+***主表数据无条件全部查询并显示***
 
 * 左（外）连接
+
+  左边的表为主表
+
 * 右（外）连接
+
+  右边的表为主表
+
+select a.name, b.ename from emp a **left/right (outer) join** emp b **on** a.mgr = b.empno
+
+**左右连接可以相互转换**
 
 *全连接（较少使用）*
 
@@ -146,15 +163,91 @@ distinct（去重）：去除重复记录
 
   *注意！加条件避免笛卡尔积现象并不能减少数据的比对次数，即无法提高运行效率*
 
-  ----
+----
 
-  * 完整的DQL语句的执行顺序*(序号表示执行顺序，从小到大执行)*
+##### 多表连接
+
+... A join B on <*condition*> join C on /*condition*/ ...
+
+##### 子查询
+
+select语句当中嵌套select语句，被嵌套的语句就叫子查询
+
+例：(子查询可以出现在以下括号位置，括号中的select语句就是子查询)
+
+select
+
+​		..(select...).
+
+from
+
+​		..(select...).
+
+where
+
+​		..(select...).
+
+* where语句嵌套子查询
+
+  * select * from emp where sal > (select avg(sal) from emp)
+
+* from语句嵌套子查询
+
+  * select
+
+    ​		t.*, s.grade
+
+    from
+
+    ​		(select deptno, avg(sal) as avgsal from emp group by deptno) t
+
+    join 
+
+    ​		salgrade s
+
+    on
+
+    ​		t.avgsal between s.losal and s.hisal
+
+* select语句嵌套子查询
+
+  * select 
+
+    ​		e.ename,(select d.dname from dept d where e.deptno = d. deptno) as dname
+
+    from 
+
+    ​		emp e
+
+##### union(将查询结果集相加)
+
+表A union 表B
+
+*注意，两个表的列数必须一致*
+
+##### limit
+
+* limit是MySQL特有的，作用是取结果值的部分数据
+
+* 语法：limit startIndex**(取出数据的起始索引，*若不填写index，默认取0*)**， Length(部分数据长度)
+
+  ​		**标准的分页sql：第n页显示的记录：limit （n-1）* N，N（N为每页显示的条数）**
+
+* 完整的DQL语句的执行顺序*(序号表示执行顺序，从小到大执行)*
 
 select(5)
 
 ​		...
 
 from(1)
+
+​		...
+
+(left/right) join
+
+​		...
+
+on
 
 ​		...
 
@@ -173,6 +266,109 @@ having(4)
 order by(6)
 
 ​		...（asc/desc）
+
+### DDL
+
+* MySQL中的数据类型
+
+  * int：整型
+  * bigint：长整型
+  * float：单精度浮点型
+  * *（double：双精度浮点型）*
+  * char：定长字符串，适合作为主键或外键
+  * varchar：可变长字符串，所占内存空间等于实际数据空间（最大长度：255个字符）
+  * Date：日期型：年月日
+  * DateTime：日期型：年月日    时分秒    毫秒
+  * time：日期型：时分秒
+  * BLOB：Binary Large OBject（二进制大对象）*存储图片，视频等流媒体信息*
+  * CLOB：Character Large OBject（字符大对象）*存储较大文本，例如4G的字符串*
+  * etc.
+
+* 建表格式
+
+  create table < tableName >（
+
+  ​		字段名1 数据类型，
+
+  ​		字段名2 数据类型，
+
+  ​		字段名3 数据类型，
+
+  ​		......
+
+  ）;
+  
+* 删除表格：drop table if exsists < tableName >;
+
+### DML（CRUD）
+
+* 插入数据
+
+  1. insert into 表名(字段名1，字段名2，......) values(值1，值2，......);(*字段数量必须和值的数量匹配！！！*)
+
+  2. insert into 表名 values(值1，值2，......*（注意！不填写字段名的情况下值的个数和顺序一定要按照表中的字段来输入，否则会出现错误的数据输入）*);
+  
+  3. insert into 表名(字段名1，字段名2，......) values(值A1，值A2，......)，(值A1，值A2，......)
+  
+     ​		(*插入多行数据*)
+  
+* 删除数据
+
+  * delete from 表名 where 条件
+
+* 修改数据
+
+  * update 表名 set 字段名 = 修改后的数据的值 where 条件
+
+### 约束关键字
+
+约束的目的：为了保证数据的完整性、合法性、有效性
+
+**常见约束**
+
+* 非空约束(not null)：约束的字段不能为NULL
+
+  ​		create table < tableName >(
+
+  ​		Password varchar(255) not null
+
+  ​		);
+
+* 唯一约束(unique)：约束的字段不能重复
+
+  1. create table < tableName >(	
+
+     Password varchar(255) unique
+
+     );
+
+  2. create table < tableName >(
+
+     Password varchar(255) ,
+
+     unique(字段名1，字段名2)*（表示两个字段名联合起来不重复）*
+
+     );
+
+* 主键约束(primary key)：约束的字段既不能为NULL，也不能重复
+
+  1. create table < tableName >(
+
+     Password varchar(255) primary key
+
+     );
+
+  2. create table < tableName >(
+
+     Password varchar(255),
+
+     primary key(字段名1，字段名2)*表示两个字段名联合起来作为主键*
+
+     );
+
+* 外键约束(foreign key)：
+
+* ~~*检查约束(check)：Oracle数据库有check约束，目前MySQL没有*~~
 
 ---
 
