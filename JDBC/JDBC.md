@@ -63,7 +63,7 @@ public class JDBCTest(){
 
             //专门用于执行DML语句
             //返回值是“影响数据库中的结果条数”
-            int count = stmt.excuteUpdate(sql);
+            int count = stmt.executeUpdate(sql);
             System.out.println(cout == 1 ? "保存成功" : "保存失败");
             
             //5.处理查询结果集
