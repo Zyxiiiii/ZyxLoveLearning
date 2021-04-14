@@ -96,3 +96,6 @@ public class JDBCTest(){
 }
 ```
 
+# 补充
+
+在新版的MySQL当中，引入了新的驱动类com.mysql.cj.jdbc.Driver，它取代了旧版的com.mysql.jdbc.Driver，在较新版本的MySQL中使用com.mysql.jdbc.Driver会导致系统报错。并且在新版的Driver下不需要用户手动注册驱动，新的驱动类支持自动注册驱动。

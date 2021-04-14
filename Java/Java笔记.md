@@ -816,6 +816,8 @@ List集合（序列）是一种接口，它实现了Collection集合。可以精
 
 LinkedList的底层数据结构是**链表**
 
+补充：LinkedList的remove方法返回的是bool值而不是被删除的对象
+
 *具体操作基本和List相同，具体见帮助文档*
 
 #### LinkedList的特有功能
@@ -1806,6 +1808,121 @@ Set
 
 *List和Set均不支持增删或修改元素，且Set还不允许出现重复元素*
 
+# 反射
+
+* 反射机制中有以下的类：
+
+```java
+java.lang.Class;
+java.lang.Field;
+java.lang.Method;
+java.lang.Modifier;
+```
+
+* 作用：
+  * 反编译：.class-->.java
+  * 通过反射机制访问java类的属性、方法、构造器
+
+## Class
+
+### 获取Class的3种方式
+
+```java
+// c1引用保存内存地址指向堆中的对象，该对象代表的是类名所代表的整个类
+Class c1 = Class.forName("<类名>");
+    
+// c2通过获取类下的类（class）属性
+Class c2 = <类名>.class;
+    
+// c3通过类创建的对象获取Class对象
+<类名> e = new <类名>();
+Class c3 = e.getClass;
+```
+
+### 通过Class类对象创建类的实例对象
+
+* 三种方法创建类对象的比较
+
+```java
+// 会执行静态代码块
+Class c1 = Class.forName("<类名>");
+
+<类名> e = new <类名>();
+Class c2 = e.getClass;
+
+// 不会执行静态代码块
+Class c3 = <类名>.class;
+```
+
+* 利用类对象创建实例对象
+
+```java
+// 获取该类对象
+Class c = Class.forName("<类名>");
+
+// 利用Class类中的newInstance方法创建实例对象
+Object o = c.newInstance();
+```
+
+
+
+# 注解
+
+## 自定义注解
+
+格式：@interface 注解名
+
+例：`@interface MyAnnotation`
+
+## 注解的用法
+
+格式：**@注解类型名**
+
+*注解可以作用在类上，属性上，方法上，变量上等...*
+
+*同样，注解可以出现在注解上*
+
+```java 
+public @interface MyAnnotation{}
+
+@MyAnnotation
+public class AnnotationTest{
+    
+    @MyAnnotation
+    private int a;
+    
+    @MyAnnotation
+    public AnnotationTest(){}
+    
+    @MyAnnotation
+    public AnnotationTest(@MyAnnotation int c){}
+    
+    @MyAnnotation
+    public static void annotation(){
+		@MyAnnotation
+        private int b;
+    }
+}
+```
+
+## @Override
+
+@Override只能注解方法，这个注解是给编译器参考的，和运行没有关系
+
+**凡是Java中又这个注解的方法，编译器都会进行编译检查，若该方法不是重写父类的方法，编译器报错。（避免程序员编写失误出bug）**
+
+## 元注解
+
+即用来标注注解的注解
+
+### @Target
+
+这个注解用于标注注解可以出现在哪些位置上
+
+### @Retention
+
+这个注解用于标注注解存活的时间
+
 # IO流
 
 ## File
@@ -2496,3 +2613,4 @@ InetAddress address = InetAddress.getByName("xxx");
 * **面向连接**的通信协议，发送方和接收方必须建立逻辑连接才能传输数据
 
   耗费资源较大，但是保证了数据的安全，应用较广泛
+

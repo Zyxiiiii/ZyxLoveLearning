@@ -35,7 +35,7 @@ public class JdbcDemo {
     /**
      * 数据库url
      */
-    private static final String URL = "jdbc:mysql://192.168.3.23:3306/mysqlTest";
+    private static final String URL = "jdbc:mysql://localhost:3306/mysqlTest";
 
     /**
      * 数据库用户名
@@ -50,7 +50,7 @@ public class JdbcDemo {
     public JdbcDemo() {
         try {
             /*注册驱动*/
-            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+//            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
             /*获取连接*/
             connection = DriverManager.getConnection(URL,USER,PASSWORD);
             /*获取操作对象*/
