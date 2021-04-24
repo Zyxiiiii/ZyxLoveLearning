@@ -187,7 +187,7 @@ from
 
 where
 
-​		..(select...).
+​		. (like) .(select...).
 
 * where语句嵌套子查询
 
