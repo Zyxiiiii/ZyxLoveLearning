@@ -1,3 +1,96 @@
+# CSS
+
+**CSS**是层叠样式表（Cacading Style Sheets），它描述了如何在屏幕，纸张或其他媒体上显示HTML元素。
+
+* CSS节省了大量工作，它可以同时控制多张网页的布局
+* 三种引入CSS的方式：外部CSS，内部CSS、行内CSS
+
+## CSS的规则集
+
+CSS 规则集（rule-set）由选择器和声明块组成：
+
+![CSS 选择器](https://www.w3school.com.cn/i/css/selector.gif)
+
+选择器指向您需要设置样式的 HTML 元素。
+
+声明块包含一条或多条用分号分隔的声明。
+
+每条声明都包含一个 CSS 属性名称和一个值，以冒号分隔。
+
+多条 CSS 声明用分号分隔，声明块用花括号括起来。
+
+## 外部引入CSS
+
+通过使用外部样式表，您只需修改一个文件即可改变整个网站的外观！
+
+1. 将CSS样式表存放在外部的CSS文件中
+
+2. 在HTML的页头中加入`<link>`字样，即可引入CSS样式表
+
+   例如：
+
+```html
+<!doctype>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="mysheet.css">
+        <!-- 
+			注意这里引用连接用的是href，不是src！
+			另外，这个格式除了href后面跟的文件名可以改动，其它都是固定格式！
+		-->
+    </head>
+</html>
+```
+
+## 内部引入CSS
+
+如果一张 HTML 页面拥有唯一的样式，那么可以使用内部样式表。
+
+内部样式是在 head 部分的`<style>`元素中进行定义。
+
+例如：
+
+```html
+<!doctype>
+<html>
+    <head>
+        <style>
+            body{
+                background-color:red;
+            }
+            
+            h1{
+                color:cyan;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>
+            这是一个一级标题
+        </h1>
+    </body>
+</html>
+```
+
+## 行内引入CSS
+
+行内样式（也称内联样式）可用于为单个元素应用唯一的样式。
+
+如需使用行内样式，请将`style`属性添加到相关元素。style 属性可包含任何 CSS 属性。
+
+例如：
+
+```html
+<!doctype>
+<html>
+	<body>
+        <h1 sytle="color: red;">这是一个一级标题</h1>
+    </body>
+</html>
+```
+
+
+
 # 手册
 
 | 属性                                                         | 描述                                                     | CSS  |

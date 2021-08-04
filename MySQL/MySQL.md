@@ -608,3 +608,15 @@ Ctrl+C：强行终止
 
 exit：退出MySQL
 
+
+
+
+
+
+
+# 新版本下MySQL初始化的语句
+
+* `systemctl start mysqld.service`：开启MySQL服务
+* `mysql -u root`：第一次进入
+* `alter user 'root'@'localhost' identified by '010425'`：修改密码，格式：`alter user 'root'@'localhost' identified by 'new pwd'`
+

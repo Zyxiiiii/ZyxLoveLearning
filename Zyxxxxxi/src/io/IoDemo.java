@@ -16,7 +16,7 @@ public class IoDemo {
      */
     public static void writeAtFirst() throws IOException {
         /*无参构造器创建对象，这种对象写入的数据只会从文件的开头开始写入*/
-        FileOutputStream os = new FileOutputStream(new File("C:\\Users\\zyx\\Desktop\\Java\\JavaLearn\\Zyxxxxxi\\ioTest.txt"));
+        FileOutputStream os = new FileOutputStream("C:\\Users\\zyx\\Desktop\\Java\\JavaLearn\\Zyxxxxxi\\ioTest.txt");
 
         /*创建一组字节数据*/
         byte[] bys1 = "****print1\r\n".getBytes();

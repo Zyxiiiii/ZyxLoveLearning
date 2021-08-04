@@ -46,7 +46,7 @@ public class MyJdbc {
             preparedStatement = connection.prepareStatement(sql);
 
             //传参
-            for (int i = 1; i < /*循环结束条件*/; i++) {
+            for (int i = 1; i < 2; i++) {
                 preparedStatement.setString(i, args[i - 1]);
             }
 

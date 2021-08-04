@@ -1,6 +1,62 @@
 # HTML
 
-HTML
+HTML（Hyper Text Markup Languege）是一种超文本标记语言，HTML由大量的标签组成，每一个标签都有开始标签和结束标签。
+
+​											<font style="color:red;">开始标签：`<标签名>`；结束标签：`</标签名>`</font>
+
+## HTML的结构
+
+```html
+<!doctype html>
+<!-- 这句话表示现在用的是html5 -->
+<html>
+    <title><!-- 这是一个html的标题栏 --></title>
+    <body>
+        <!-- 
+			这是html的代码体
+		-->
+    </body>
+</html>
+```
+
+以上就是html的结构，<font style=color:red>html不区分大小写，语法较松散</font>
+
+## HTML的实体符号
+
+当我们需要用到一些符号与HTML的语句冲突时，需要用到实体符号。如：
+
+```html
+当我们需要写b<a>c这样的表达式时，中间的<a>会被解析成HTML语句，所以，这句话应该这么写：
+    b &lt; a &gt; c
+中间的'&lt;'以及'&gt;'就是分别代表了小于号和大于号的实体符号
+```
+
+<img src="HTML的实体符号.png" style="zoom:80%">
+
+## HTML 元素语法
+
+- HTML 元素以**开始标签**起始
+- HTML 元素以**结束标签**终止
+- **元素的内容**是开始标签与结束标签之间的内容
+- 某些 HTML 元素具有<font style="font-weight:900;color:gray">空内容（empty content）</font>
+- 空元素*在开始标签中进行关闭*（以开始标签的结束而结束）
+- 大多数 HTML 元素可拥有**属性**
+
+## HTML 属性
+
+HTML 标签可以拥有*属性*。属性提供了有关 HTML 元素的*更多的信息*。
+
+属性总是以名称/值对的形式出现，比如：`name="value"`。
+
+属性总是在 HTML 元素的**开始标签**中规定。
+
+* 属性实例
+
+HTML 链接由 `<a> `标签定义。链接的地址在 href 属性中指定：
+
+```html
+<a href="http://www.w3school.com.cn">This is a link</a>
+```
 
 # 手册
 
