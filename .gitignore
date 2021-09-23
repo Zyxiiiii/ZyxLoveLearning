@@ -1,0 +1,7 @@
+#Git ignore list#
+/Zyxxxxxi/out/
+/Zyxxxxxi/*.iml
+!*.java
+/.git/
+/Zyxxxxxi/.idea/
+/MySQL/powernode/
