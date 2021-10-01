@@ -1001,3 +1001,47 @@ Tips：在关机或重启时，都应该先执行一次`sync`指令，把内存�
 ## `RPM`包的管理
 
   * `RPM`是一种用于互联网下载包的打包及安装工具，它包含在某些`Linux`分发版中。它生成具有`.RPM`扩展名的文件。`RPM`是`RedHat Package Manager`的缩写，类似`Windows`的`setup.exe`
+  * `RPM`包名的基本格式
+    
+    例：一个`RPM`包名为`firefox-45.0.1-1.el6.centos.x86_64.rpm`
+    
+    名称：`firefox`
+    
+    版本号：`45.0.1-1`
+    
+    适用操作系统：`el6.centos.x86_64`
+    * 表示`centos6.x`的64位系统
+    * 如果是`i686`、`i386`表示32位系统；`noarch`表示通用
+  * `RPM`包的查询指令
+    * `rpm -qa`：查询所安装的所有`RPM`软件包
+    * `rpm -qa | more`：将查询的结果交给`more`进行展示
+    * `rpm -qa | grep X`：查询是否安装了`X`关键字的软件包
+    * `rpm -q X`：查询软件包`X`是否安装
+    * `rpm -qi X`：查询软件包`X`的相关信息
+    * `rpm -ql X`：查询软件包`X`中的文件
+    * `rpm -qf d`：查询**全路径名**为d的文件所属的软件包
+ * `RPM`包的卸载
+   * `rpm -e X`：卸载名为`X`的`RPM`包
+     
+     有时候有些`RPM`包是被其他包所依赖的，那么这时候删除这个`RPM`包就会爆出错误信息，如：`removing these packages would break dependencies:foo is needed by bar-1.0.1`
+     
+     如果我们需要强制性删除这个包，就可以利用参数`--nodeps`：`rpm -e --nodeps foo`（不建议轻易使用）
+     
+ * `RPM`包的安装
+   * `rpm -ivh X`：安装名为`X`的`RPM`包
+     
+     参数说明：
+     * `i`：`install`安装
+     * `v`：`verbose`提示
+     * `h`：`hash`进度条
+
+## `YUM`包
+
+  * `YUM`是一个`Shell`前端软件包管理器。基于`RPM`包管理，**能够从指定的服务器自动下载`RPM`包并安装，可以自动处理依赖性关系，并且一次安装所有依赖的软件包**
+
+  * `YUM`的工作逻辑
+    `YUM`在工作时需要连接网络（前提），在我们查询和安装软件时，会连接到`YUM`的服务器，里面有许多的`RPM`包，获取到相关的`RPM`包以后就可以进行相关操作
+
+## `YUM`包的基本指令
+  * `yum list | grep XXXX`：查询`YUM`服务器
+  * `yum install xxx`：下载安装（默认安装最新版本）
