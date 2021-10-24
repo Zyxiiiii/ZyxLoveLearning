@@ -221,7 +221,7 @@ my**N**ame, is**O**pen, next**C**heck**T**ime
 
 ## 运算符
 
-![Java运算符的先后次序](C:\Users\zyx\Desktop\大学\LearnGit\Learn\zyx-lqq\zyx\Java\MarkDown\Java运算符.png)
+![Java运算符的先后次序](Java运算符.png)
 
 *Tips：“==”号做比较时，如果数据是基本数据类型，那么比较的是数据值是否相同；如果比较的是引用数据类型，比较的是地址值是否相同*
 
