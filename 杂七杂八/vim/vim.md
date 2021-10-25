@@ -147,3 +147,28 @@
 | :help cmd              | 找出关于cmd的帮助           |
 | CTRL+w                 | 跳转到另一窗口              |
 | :command, press CTRL+d | 以查看可能的补齐            |
+
+# 设置
+
+```
+设置（软制表符宽度为4）
+	set tabstop=4
+	set softtabstop=4
+设置缩进的空格数为4
+	set shiftwidth=4
+设置自动缩进：每行的缩进值与上一行相等；使用 noautoindent 取消设置：
+	set autoindent
+使用 C/C++ 语言的自动缩进方式
+	set cindent
+设置C/C++语言的具体缩进方式：
+	set cinoptions={0,1s,t0,n-2,p2s,(03s,=.5s,>1s,=1s,:1s
+显示行号
+	set nu
+显示标尺
+	set ruler
+将搜索内容反白
+	set hlsearch
+可以删除任意值
+	set backspace=2
+```
+
