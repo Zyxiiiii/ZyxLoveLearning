@@ -8,4 +8,21 @@
 
 属性
 
-- `destination`：将人物自动设置到相应的位置
+- `destination`：这是指定了人物的目的地的变量，通过`setDestination`可以修改人物的目的地，让`Navigation`自动寻路到目的地（即目的坐标）
+
+# Events
+
+- `Events`是`unity`中的事件系统，通过事件，我们可以自定义许多玩家的操作会触发的情况，例如我们给鼠标左键绑定了一个`onMouseClick`事件以后，在玩家点击了鼠标的某一个键以后，就会自动调用我们提前设置好的方法，来调度游戏中的对象
+
+  具体自定义步骤
+
+  ```C#
+  // 使得这个类的对象可以被序列化
+  [System.Serializable]
+  // 自定义一个事件，并继承于Unity的事件，用泛型表示出我们需要的是什么变量
+  public class EventVector3:UnityEvent<Vector3> {}
+  ```
+
+  然后在我们需要的地方创建出这样的变量，就可以在组件中配置我们的时间信息了
+
+  
