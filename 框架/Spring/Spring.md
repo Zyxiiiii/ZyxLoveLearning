@@ -494,3 +494,62 @@ Tips：在获取`ApplicationContext`对象时，获取的`xml`文件名是写死
   1. 在`web.xml`中配置`ContextLoaderListener`监听器（需要导入`spring-web`坐标）
   2. 配置`web.xml`中的`context`域参数`contextConfigLocation`，值为核心配置文件的路径
   3. 使用`WebApplicationContextUtils`获得应用上下文对象
+
+# maven项目中spring所需的依赖
+
+```xml
+<!--
+	spring的版本，这里以5.3.9为例
+-->
+<maven.spring.version>5.3.9</maven.spring.version>
+<!--  maven依赖  -->
+<dependencies>
+    <!-- Spring依赖 -->
+    <!-- 1.Spring核心依赖 -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>${maven.spring.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-beans</artifactId>
+        <version>${maven.spring.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${maven.spring.version}</version>
+    </dependency>
+    <!-- 2.Spring dao依赖 -->
+    <!-- spring-jdbc包括了一些如jdbcTemplate的工具类 -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
+        <version>${maven.spring.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-tx</artifactId>
+        <version>${maven.spring.version}</version>
+    </dependency>
+    <!-- 3.Spring web依赖 -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>${maven.spring.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
+        <version>${maven.spring.version}</version>
+    </dependency>
+    <!-- 4.Spring test依赖：方便做单元测试和集成测试 -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${maven.spring.version}</version>
+    </dependency>
+</dependencies>
+```
+
