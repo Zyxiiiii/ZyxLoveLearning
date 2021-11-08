@@ -259,7 +259,7 @@ int main()
       *a = *a + *b;
       *b = *a - *b;
       *a = *a - *b;
-      cout << *a << *b << endl;
+      std::cout << *a << *b << std::endl;
   }
   ```
 
@@ -306,4 +306,83 @@ int main()
 ## 结构体数组
 
 - 作用：将自定义的结构体存放到数组种方便维护
+
+- 语法：
+
+  - 创建结构体数组：`struct 结构体名 数组名[元素个数] = { { }, { }, ..., { } };`
+  - 访问结构体数组：`数组名[索引].成员名`（可以对结构体数组的某一元素的成员进行赋值或调用）
+
+  例：
+
+  ```c++
+  // 定义一个结构体
+  struct Student
+  {
+      string name;
+      int age;
+      float score;
+  };
+  
+  // 创建结构体数组
+  struct Student students[3] = 
+  {
+      {"zhangsan", 18, 60},
+      {"lisi", 19, 65},
+      {"wangwu", 18, 90} 
+  };
+  
+  // 访问结构体数组中的元素
+  std::cout << students[2].name << std::endl; // "wangwu"
+  ```
+
+## 结构体指针
+
+- 结构体指针的定义：`struct 结构体名 * 指针名 = 变量取址;`
+
+- 结构体指针访问结构体成员：`指针名 -> 成员名`
+
+  例：
+
+  ```c++
+  // 结构体指针的定义
+  struct Student * p = &student; // student{ name = "wangwu", age = 18, score = 90 }
+  
+  // 访问成员
+  std::cout << "姓名: " << p -> name << std::endl; // "姓名: wangwu"
+  ```
+
+  
+
+## 结构体嵌套
+
+- 结构体嵌套：定义一个结构体时，将另一个结构体作为该结构体的成员
+
+  例：
+
+  ```c++
+  struct student { };
+  struct teacher
+  {
+      // 嵌套的学生结构体
+      struct student stu;
+  };
+  ```
+
+## 结构体作为函数参数
+
+- 将结构体作为参数向函数中传递
+
+- 结构体作为函数参数传递有两种方式
+
+  - 值传递
+
+    直接将变量作为参数传入函数
+
+    函数的定义：`void func1(struct student s) { }`
+
+  - 址传递
+
+    将变量的地址作为参数传入函数，利用一个指针来接收这个地址
+
+    函数的定义：`void func2(struct student * s) { }`
 

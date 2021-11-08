@@ -25,5 +25,35 @@
 
   然后在我们需要的地方创建出这样的变量，就可以在组件中配置我们的时间信息了
 
+# Cinemachine
+
+- `cinemachine`是unity提供的一个用于控制摄像机的组件，可以通过`Package Manager`下载
+
+  <img src="./cinemachine/cinemachine.png" alt="cinemachine" style="zoom:67%;" />
+
+然后`install`完成以后会在菜单栏出现一个`cinemachine`，点开会有一个列表，里面可以选择不同的`cinemachine`
+
+<img src="./cinemachine/cinemachine_box.png" alt="cinemachineBox" style="zoom:67%;" />
+
+## Virtual Camera
+
+### Body
+
+<img src="cinemachine\Virtual Camera\BodyProperties.png" alt="BodyProperties_DoNothing" style="zoom:67%;" />
+
+- `Do Nothing`
+
   
+
+- `3rd Person Follow`
+
+- `Framing Transposer`
+
+- `Hard Lock To Target`
+
+- `Orbital Transposer`
+
+- `Tracked Dolly`
+
+- `Transposer`
 
