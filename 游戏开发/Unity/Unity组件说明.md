@@ -39,21 +39,35 @@
 
 ### Body
 
-<img src="cinemachine\Virtual Camera\BodyProperties.png" alt="BodyProperties_DoNothing" style="zoom:67%;" />
+<img src="cinemachine\Virtual Camera\BodyProperties.png" alt="BodyProperties_DoNothing" style="zoom:100%;" />
 
 - `Do Nothing`
 
-  
+  摄像机不会进行任何操作
 
 - `3rd Person Follow`
 
+  将相机水平和垂直地旋转在玩家周围，**以跟随**目标。
+
 - `Framing Transposer`
+
+  在固定屏幕空间关系中移动到**跟随**目标。
+
+  即常规的3D RPG（如剑网三）的视角一样，以上帝视角观察游戏角色
 
 - `Hard Lock To Target`
 
+  在**跟随**目标处使用相同的位置。
+
 - `Orbital Transposer`
+
+  在可变关系中移动到**跟随**目标，可选地接受玩家输入。
 
 - `Tracked Dolly`
 
+  沿着预定的道路移动。
+
 - `Transposer`
+
+  在固定关系中移动到**跟随**目标。
 
