@@ -24,4 +24,19 @@ Tips：`PlatformTransactionManager`只是一个接口，我们需要根据我们
 |     `boolean isReadOnly`     |      是否只读      |
 
 - 隔离级别：略
+
 - 传播行为：
+
+  <img src="Spring事务控制——事务的传播行为.png" alt="Spring事务控制——事务的传播行为" style="zoom:100%;" />
+
+## Transaction Status
+
+`TransactionStatus`接口提供的是事务具体的运行状态
+
+|            方法            |      说明      |
+| :------------------------: | :------------: |
+|   `boolean hasSavepoint`   | 是否存储回滚点 |
+|   `boolean isCompleted`    |  事务是否完成  |
+| `boolean isNewTransaction` |  是否是新事务  |
+|  `boolean isRollbackOnly`  |  事务是否回滚  |
+
