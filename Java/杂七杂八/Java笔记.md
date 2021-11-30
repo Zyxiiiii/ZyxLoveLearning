@@ -2198,7 +2198,7 @@ ASCII字符集是基于拉丁字母的一套电脑编码系统
 
     * InputStreamReader
 
-      （不涉及编码问题时可选用FileWriter）
+      （不涉及编码问题时可选用FileReader）
 
     * BufferedReader
 
@@ -2206,7 +2206,7 @@ ASCII字符集是基于拉丁字母的一套电脑编码系统
 
     * OutputStreamWriter
 
-      （不涉及编码问题时可选用FileReader）
+      （不涉及编码问题时可选用FileWriter）
 
     * BufferedWriter
 
