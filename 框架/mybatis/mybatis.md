@@ -76,7 +76,7 @@
    }
    ```
 
-# MyBatis映射文件概述
+## MyBatis映射文件概述
 
 ![MyBatis映射文件概述](MyBatis映射文件概述.png)
 
@@ -89,21 +89,135 @@
   - `resultType`：规定语句的查询结果类型（实体的全限定名），即查询以后需要封装成的目标实体
   - 标签内部：`sql`语句
 
-# MyBatis的CRUD
+## MyBatis的CRUD
 
   `MyBatis`中，`CRUD`的`SQL`被封装到了映射文件中，在代码中我们只需要调用相应的操作，`MyBatis`会自动帮我们完成对象解析成`SQL`，和结果集封装成对象的操作
-  
+
   其中，我们通过映射文件的`xml`标签编写我们的`SQL`语句，并定好我们的`SQL`语句需要进行封装的实体类，来完成业务和`DAO`的解耦合
-  
+
   相关标签
   - 根标签：`mapper`
+
   - 操作标签
     - `select`：查询
     - `insert`：插入
     - `delete`：删除
     - `update`：更新
+    
   - 通用属性
     - `parameterType`：参数实体类
       
-      当我们需要使用预编译的`SQL`语句时，需要一个这样的参数实体类来规定传入的是一个什么
+      例：
+      
+      ```xml
+      <insert parameterType="xxx.User">
+      	insert into user values(#{id},#{username},#{password})
+      </insert>
+      ```
+      
     - `reesultType`：结果实体类
+    
+      例：
+    
+      ```xml
+      <select resultType="xxx.User">
+      	select * from user
+      </select>
+      ```
+    
+    Tips：当我们需要使用预编译的`SQL`语句时，需要一个这样的参数实体类来规定传入的是一个什么类型的实体，并且利用这个实体通过**自省**来获取到预编译需要的内容
+    
+    预编译的内容和默认`SQL`的预编译语句略有不同，在配置文件中，`SQL`语句需要预编译的部分可以直接用`#{属性名}`传入，不需要使用占位符
+
+### CRUD中需要注意的问题
+
+- 映射文件中使用`parameterType`属性指定要插入的数据类型
+- `SQL`语句中需要使用`#{实体的属性名}`来引用实体中的属性值
+- 设计增删改的操作时需要修改数据库，默认情况下`MyBatis`的事务处于开启状态，所以在操作完成以后需要`commit`提交事务
+
+# MyBatis核心配置文件
+
+## MyBatis核心配置文件的层级关系
+
+- `Configuration`：配置，**核心配置文件的根标签**
+  - `properties`：属性
+  - `settings`：设置
+  - `typeAliases`：类型别名
+  - `typeHandlers`：类型处理器
+  - `objectFactory`：对象工厂
+  - `plugins`：插件
+  - **`environments`：环境**
+    - `environment`：环境变量
+      - `transactionManager`：事务管理器
+      - `dataSource`：数据源
+  - `databaseProvider`：数据库厂商标识
+  - `mappers`：映射器
+
+## environment
+
+数据库环境的配置，支持**多环境配置**
+
+![environment标签](environment标签.png)
+
+- `environments`
+
+  - 属性
+    - `default`：指定默认的环境
+  - 子标签
+    - `environment`
+
+  例：
+
+  ```xml
+  <!-- 配置数据源环境 -->
+  <environments default="dev">
+  	<environment id="dev">
+      	<transactionManager type="JDBC"/>
+          <dataSource type="POOLED">
+          	<propertiy name="[连接需要的属性名]" value="[连接需要的属性值]"/>
+          </dataSource>
+      </environment>
+  </environments>
+  
+  <!-- 加载映射文件 -->
+  <mapppers>
+  	<mapper resource="xxx/xxx/xxx.xml"></mapper>
+  </mapppers>
+  ```
+
+- `environment`
+
+  - 属性
+
+    - `id`：环境的唯一性标识
+
+  - 子标签
+
+    - `transactionManager`：事务管理器，有两种参数
+
+      - `JDBC`：这个配置就是直接使用了`JDBC`的提交和回滚设置，它依赖于从数据源得到的连接来管理事务作用域
+      - `MANAGED`：这个配置从来不提交或者回滚一个连接，而是让容器来管理事务的整个生命周期。默认情况下它会关闭连接，可以通过将`closeConnection`属性设置为`false`阻止它默认关闭
+
+    - `dataSource`：数据源，有三种参数
+
+      - `UNPOOLED`：这个数据源的实现只是在每次被请求时打开和关闭连接
+      - `POOLED`：这种数据源的实现利用“池”的概念将`JDBC`连接对象组织起来
+      - `JNDI`：这个数据源的实现是为了能在如`EJB`或应用服务器这类容器中使用，容器可以集中或在外部配置数据源，然后放置一个`JNDI`上下文的引用
+
+      其中`dataSource`含有`property`子标签，可以用于设置数据源的一些参数，如`driver`、`url`、`username`、`password`
+
+      Tips：以上两种配置都支持自定义，其中
+
+      - 自定义事务管理器：实现`TransactionFactory`接口
+      - 自定义数据源：实现`DataSourceFactory`接口
+      - 一般情况下，事务管理器
+
+- `mappers`：用于加载映射文件
+
+  子标签
+
+  - `mapper`：该标签的作用是用于加载映射的，主要有以下几种加载方式
+    - 使用相对于类路径的资源引用：`<mapper resource="xxx/xxx/xxx.xml"/>`
+    - 使用完全限定资源定位符：`<mapper url="file://xxx/xxx/xxx.xml"/>`
+    - 使用映射器接口实现类的完全限定名：`<mapper class="xxx.xxx.xxx（类名）"`
+    - 将包内的映射器接口实现全部注册为映射器：`<package name="xxx.xxx.xxx（包名）"`
