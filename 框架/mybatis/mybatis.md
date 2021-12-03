@@ -214,10 +214,98 @@
 
 - `mappers`：用于加载映射文件
 
-  子标签
+    子标签：
 
   - `mapper`：该标签的作用是用于加载映射的，主要有以下几种加载方式
-    - 使用相对于类路径的资源引用：`<mapper resource="xxx/xxx/xxx.xml"/>`
+    - **使用相对于类路径的资源引用**：`<mapper resource="xxx/xxx/xxx.xml"/>`
     - 使用完全限定资源定位符：`<mapper url="file://xxx/xxx/xxx.xml"/>`
     - 使用映射器接口实现类的完全限定名：`<mapper class="xxx.xxx.xxx（类名）"`
     - 将包内的映射器接口实现全部注册为映射器：`<package name="xxx.xxx.xxx（包名）"`
+
+## properties
+
+  - 类比于`Spring`，`MyBatis`同样可以从外部加载配置文件，并通过`${key}`表达式的形式**引用**外部的配置
+
+    ```xml
+    <!-- 起别名 -->
+    <typeAliases>
+      <typeAlias type="xxx.xxx.User" alias="user"></typeAlias>
+    </typeAliases>
+    
+    <!--
+      在完成了起别名以后，我们再调用这个类时，就可以不必用这个类的全限定名，而是通过别名对类进行引用
+    -->
+    <select id="findAll" resultType="user">
+      SELECT * FROM user
+    </select>
+    ```
+    
+  - 对于一些比较常见的类型，`MyBatis`已经为我们定义好了别名
+
+    |别名|数据类型|
+    |:---:|:---:|
+    |`string`|`Srting`|
+    |`long`|`Long`|
+    |`int`|`Integer`|
+    |`double`|`Double`|
+    |`boolean`|`Boolean`|
+    |...|...|
+    
+    Tips：别名的定义要定义在使用之前，一般直接跟着`properties`标签一起放在根目录内容的最上方
+    
+#    MyBatis的常见API
+
+## SQL Session工厂构建器
+  我们构建一个`SQL Sesson`工厂，需要用到工厂构建器：`SqlSessionFactoryBuilder`，而这个类常用的API有
+  - `SqlSessionFactory build(InputStream inputStream);`
+    
+    该方法可以通过`inputStream`中包含的`xml`配置文件，构建出一个`SqlSessionFactory`，通过这个`SqlSessionFactory`我们才能创建出供给我们操作数据库的`SqlSession`
+    
+    ```java
+    String resource = "org/mybatis/builder/mybatis-config.xml";
+    // 该Resources是MyBatis提供给我们的一个类，它能帮助我们快捷地定位到类加载路径下的资源（maven工程则定位到resources包下），而不需要从工程的根开始读取
+    InputStream inputStream = Resources.getResourceAsStream(resource);
+    SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
+    SqlSessionFactory factory = builder.build(inputStream);
+    ```
+    
+## Sql Session工厂对象
+  我们构建好了`SqlSessionFactory`以后，还需要通过这个工厂创建操作数据库用的`SqlSession`会话对象，`SqlSessionFactory`常用的API有`openSession`
+  - `openSession(boolean autoCommit = false)`：默认开启一个事务，但事务不会自动提交，所以该**事务需要手动提交**，对数据库的**更新操作**才会被写入数据库，如果`autoCommit`设置为`true`则不需要手动提交
+
+    ```java
+    // 假设已经获取了SqlSessionFactory对象（factory）
+    // 该对象为默认值，即不对更新操作进行自动提交
+    SqlSession sqlSession = factory.openSession();
+    // 该对象将autoCommit设置为了true，则在完成一条SQL语句以后会对事物进行一次自动提交
+    SqlSession sqlSession = factory.openSession(true);
+    ```
+    
+## Sql Session会话对象
+
+  获取到了`SqlSession`对象以后，我们就可以通过这个对象，对数据库进行`CRUD`、事务等操作了，它的主要方法有：
+  
+ ```java
+ /*
+  * 以下方法中的参数说明：
+  *   statement：映射文件中sql标签的唯一标识，用于定位需要用到的sql语句
+  *   parameter：需要传入的参数，对应映射文件中的parameterType；若传入的参数是一个基本数据类型或字符串，那么则不对标签中的表达式和类型作要求
+  */
+ // 查询一条数据，返回相应的一个对象
+ <T> T selectOne(String statement, Object parameter);
+ // 查询多条数据，返回相应的映射类的List
+ <E> List<E> selectList(String statement, Object parameter);
+ // 以下方法的返回值均是对数据库操作所影响的总行数
+ // 将数据插入到表中
+ int insert(String statement, Object parameter);
+ // 更新数据
+ int update(String statement, Object parameter);
+ // 删除数据
+ int delete(String statement, Object parameter);
+ 
+ // 以下为一些对数据库的事务的操作方法
+ // 提交事物
+ void commit();
+ // 回滚事务
+ void rollback();
+ ```
