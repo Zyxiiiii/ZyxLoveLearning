@@ -32,7 +32,7 @@
    <!-- 编写映射，并赋予命名空间，方便在代码中调用 -->
    <mapper namespace="[命名空间]">
    	<select id="findAll" resultType="xxx.[待封装的实体类]">
-       	select * from [tableName]
+       	SELECT * FROM [tableName]
        </select>
    </mapper>
    ```
@@ -111,7 +111,7 @@
       
       ```xml
       <insert parameterType="xxx.User">
-      	insert into user values(#{id},#{username},#{password})
+      	INSERT INTO `user` VALUES(#{id},#{username},#{password})
       </insert>
       ```
       
@@ -121,7 +121,7 @@
     
       ```xml
       <select resultType="xxx.User">
-      	select * from user
+      	SELECT * FROM `user`
       </select>
       ```
     
@@ -236,7 +236,7 @@
       在完成了起别名以后，我们再调用这个类时，就可以不必用这个类的全限定名，而是通过别名对类进行引用
     -->
     <select id="findAll" resultType="user">
-      SELECT * FROM user
+      SELECT * FROM `user`
     </select>
     ```
     
@@ -364,11 +364,11 @@ public interface UserMapper{
 		resultType的类型应该和方法的返回值一致
  	-->
 	<select id="findAll" resultType="com.xxx.xxx.User">
-    select * from user
+    SELECT * FROM user
     </select>
     
     <select id="findById" parameterType="int" resultType="com.xxx.xxx.User">
-    select * from user where id=#{id}
+    SELECT * FROM `user` WHERE `id`=#{id}
     </select>
 </mapper>
 ```
@@ -390,5 +390,66 @@ public static void main(String[] args){
 }
 ```
 
+# Mybatis映射文件深入
 
+## 动态SQL语句
+
+### 动态sql语句概述
+
+`Mybatis`的映射文件中，前面我们的`SQL`都是比较简单的，有些时候业务逻辑复杂时，我们的`SQL`是动态变化的，此时前面的学习中我们的`SQL`就不能满足需求了，那么此时我们就需要使用动态`SQl`语句来满足我们的需要
+
+### 动态SQL标签——if
+
+- 根据实体类的不同取值，我们可以使用不同的`SQL`语句来进行查询，比如在`id`不为空时我们可以根据`id`查询，如果`username`不为空时还要加入用户名作为条件
+
+- 语法：`<if test="[condition]">SQL Body</if>`，如果`if`中`test`属性的条件成立，则动态地添加`SQL Body`到已有的`SQL`语句后面
+
+  例：
+
+  ```xml
+  <select id="findByCondition" parameterType="com.xxx.xxx.User" resultType="com.xxx.xxx.User">
+  	SELECT * FROM `user` WHERE 1=1
+      <!-- 在以下的标签中，会对test属性进行判断，如果结果为true，则将标签体中的内容拼接到以上的SQL语句后面 -->
+      <if test="id!=0">
+          AND `id`=#{id}
+      </if>
+      <if test="username!=null">
+          AND `username`=#{username}
+      </if>
+      <if test="password!=null">
+          AND `password`=#{password}
+      </if>
+  </select>
+  ```
+
+  以上就是`if`标签的用法，但是在`SQL`语句中后跟`WHERE 1=1`使得我们的代码不太优雅，所以我们需要引入一个新的标签——`where`，它可以自动地识别我们的标签，并为我们的标签判断是否需要动态地后接一个`WHERE`语句和是否需要添加前置的`AND`，这样我们就不需要在原本的`SQL`中后跟一个`WHERE 1=1`了
+
+  ```xml
+  <!-- where标签的使用 -->
+  <select id="findByCondition" parameterType="com.xxx.xxx.User" resultType="com.xxx.xxx.User">
+  	SELECT * FROM `user`
+      <!--
+  		例如以下的标签中，
+  			如果只有第二第三个标签的test为true的话，则SQL为：SELECT * FROM `user` WHERE `username`=#{username} AND `password`=#{password}
+  			如果所有标签的test都为false的话，则SQL为：SELECT * FROM `user`
+  	-->
+      <where>
+          <if test="id!=0">
+              AND `id`=#{id}
+          </if>
+          <if test="username!=null">
+              AND `username`=#{username}
+          </if>
+          <if test="password!=null">
+              AND `password`=#{password}
+          </if>
+      </where>
+  </select>
+  ```
+
+### 动态SQL标签——foreach
+
+- 有些时候，我们还可能会进行大量的查询或插入，这时候我们就需要循环生成`SQL`语句了，这时候`foreach`标签就可以派上用场了，`foreach`标签会循环将我们需要的数据集（数组、链表等）拼接到`SQL`语句中
+
+- 语法：`<foreach collection="[封装数据的结构类型]" open="[开头]" close="[结尾]" item="[接收集合的每一个项]" separator>[itemValue]</foreach>`
 

@@ -1,9 +1,31 @@
 # 安装CentOS（略）
 
 * `CentOS`
+
 * `VMware`
+
 * <font style="color:gray">`VMware Tools`</font>
   * 共享文件夹
+  
+    ```shell
+    # 安装open-vm-tools
+    sudo apt-get autoremove open-vm-tools
+    sudo yum install open-vm-tools
+    
+    # 重启
+    reboot
+    
+    # 挂载共享文件夹
+    vmhgfs-fuse .host:/[已存在的共享目录] [需要挂在到的路径] -o nonempty -o allow_other
+    e.g. mount -t vmhgfs .host:/VMware /mnt/hgfs/myShared
+    
+    # 查看当前虚拟机已有的共享目录
+    vmware-hgfsclient
+    ```
+  
+    ![](挂载共享文件夹_1.png)
+    
+    ![](挂载共享文件夹_2.png)
 
 # Linux目录结构
 
@@ -820,7 +842,7 @@ Tips：在关机或重启时，都应该先执行一次`sync`指令，把内存�
 ## Linux网络环境配置
 
 * 自动获取
-    
+  
     登陆后，通过界面来设置自动获取`IP`
     
     系统 -> 首选项 -> 网络连接 -> 选择需要设置的网卡 -> 编辑 -> 勾选自动连接 -> 应用
@@ -832,7 +854,7 @@ Tips：在关机或重启时，都应该先执行一次`sync`指令，把内存�
     由于`IP`地址不固定，所以不能当作服务器使用
     
 * 修改配置文件
-    
+  
     直接修改配置文件来指定`IP`，并可以连接到外网
     
     编辑`/etc/sysconfig/network-scripts/ifcfg-eth0`
@@ -866,8 +888,50 @@ Tips：在关机或重启时，都应该先执行一次`sync`指令，把内存�
      GATEWAY=xxx.xxx.xxx.xxx
      # 域名解析器
      DNS1=xxx.xxx.xxx.xxx
+     # =========================================
+     # 配置文件接口类型：有Ethernet 、IPsec等类型，网络接口类型为Ethernet
+     TYPE="Ethernet"
+     # 系统启动地址协议：
+           # none：不使用启动地址协议 
+           # bootp：BOOTP协议
+           # dhcp：DHCP动态地址协议 
+           # static：静态地址协议
+     BOOTPROTO="static"
+     # 静态IP 设为 192.168.1.200
+     IPADDR=192.168.1.200
+     # 子网掩码
+     NETMASK=255.255.255.0
+     # 网络段
+     NETWORK=192.168.1.0
+     # 广播地址
+     BROADCAST=192.168.1.255
+     # GATEWAY：网关地址
+     # HWADDR/MACADDR：MAC地址。只需设置其中一个，同时设置时不能相互冲突。
+     # NM_CONTROLLED：是否由Network Manager控制该网络接口。修改保存后立即生效，无需重启。建议一般设为no。
+           # yes：由Network Manager控制
+           # no：不由Network Manager控制
+     # 是否把这个eth设置为默认路由呢
+     DEFROUTE="yes"
+     # 是否指定DNS。如果使用DHCP协议，默认为yes。
+     PEERDNS="yes"
+     PEERROUTES="yes"
+     IPV4_FAILURE_FATAL="no"
+     # 是否执行IPv6
+     IPV6INIT="yes"  
+     IPV6_AUTOCONF="yes"
+     IPV6_DEFROUTE="yes"
+     IPV6_PEERDNS="yes"
+     IPV6_PEERROUTES="yes"
+     IPV6_FAILURE_FATAL="no"
+     # 这个网络的名字
+     NAME="eno16777736"
+     UUID="6c336bc6-c471-4e9b-aeb8-b1f380fbe22f"
+     # 网络接口名称
+     DEVICE="eno16777736"
+     # 是否开机启动
+     ONBOOT="yes"
      ```
-     
+    
 # 进程管理
 
 * 基本介绍：
@@ -918,20 +982,20 @@ Tips：在关机或重启时，都应该先执行一次`sync`指令，把内存�
       `ps -aux`：
       
       `ps -ef`：以全格式显示当前所有的进程，包括父进程
-      
+
 ## 终止进程
 
 * 若是某个进程执行一半需要停止时，或是已经消耗了很大的系统资源时，此时可以考虑停止该进程，使用`kill`命令来完成此项任务
 * `kill [选项] 进程号`：通过进程号杀死进程
 * `killall 进程名称`：通过进程名称杀死进程，也支持通配符，这在系统因负载过大而变得很慢时很有用
-    
+  
     常用选项：
     * `-9`：强制进程立即停止
 
 ## 查看进程树
 
 * `pstree [选项]`：可以更加直观的来查看进程信息
-    
+  
     常用选项：
     
     * `-p`：显示进程的`PID`
@@ -951,15 +1015,15 @@ Tips：在关机或重启时，都应该先执行一次`sync`指令，把内存�
     * `status`：显示服务状态
 
     以上语句对服务的修改只是临时生效，重启系统后还是会重新回到原来的状态，若要对某个服务的修改永久生效，则需要使用`chkconfig`指令
-    
+  
 * 查看`Linux`已有的服务名
   * 使用 `setup` -> 系统服务 就可以看到
   * `/etc/init.d/服务名称`
 
     使用`ls -l /etc/init.d/`可以列出服务有哪些服务
-    
+  
 * `chkconfig`指令
-    
+  
     `chkconfig`命令可以给每个运行级别设置自启动/关闭
     
     基本语法：
@@ -988,7 +1052,7 @@ Tips：在关机或重启时，都应该先执行一次`sync`指令，把内存�
     |`N`|以`PID`排序|
     |`k`|杀死某个进程（在输入`k`并回车后，会提示输入将要结束的进程的`ID`号）|
     |`q`|退出`top`|
-    
+  
 * 网络监控（`netstat`）
   * `netstat [选项]`：查看系统网络情况
 
@@ -1026,7 +1090,7 @@ Tips：在关机或重启时，都应该先执行一次`sync`指令，把内存�
      有时候有些`RPM`包是被其他包所依赖的，那么这时候删除这个`RPM`包就会爆出错误信息，如：`removing these packages would break dependencies:foo is needed by bar-1.0.1`
      
      如果我们需要强制性删除这个包，就可以利用参数`--nodeps`：`rpm -e --nodeps foo`（不建议轻易使用）
-     
+   
  * `RPM`包的安装
    * `rpm -ivh X`：安装名为`X`的`RPM`包
      
@@ -1045,3 +1109,7 @@ Tips：在关机或重启时，都应该先执行一次`sync`指令，把内存�
 ### `YUM`包的基本指令
   * `yum list | grep XXXX`：查询`YUM`服务器
   * `yum install xxx`：下载安装（默认安装最新版本）
+
+# 一些奇形怪状的网站
+
+- 用于找最快连接GitHub的节点：[多个地点Ping服务器,网站测速 - 站长工具 (chinaz.com)](http://ping.chinaz.com/)
