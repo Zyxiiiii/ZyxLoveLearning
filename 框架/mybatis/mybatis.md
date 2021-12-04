@@ -1,4 +1,4 @@
-# MyBatis简介
+# Mybatis简介
 
 - 原始的`JDBC`开发操作存在如下问题：
 
@@ -16,11 +16,11 @@
 
 - `mybatis`是一个**基于`java`的持久层框架**，它将底层的繁琐的`jdbc`操作进行了封装，使开发者**只需要关注`sql`语句本身，而不需要花费精力去处理加载驱动、创建连接、创建`statement`等繁杂的过程**。它利用`Java`对象和`statement`中的动态参数进行映射，采用`ORM(Object-Relational Mapping)`思想解决了实体和数据库映射的问题，最后**会将`sql`执行后的结果集映射为`Java`对象并返回**，极大的简化了开发步骤
 
-# MyBatis快速入门
+# Mybatis快速入门
 
-## MyBatis开发步骤
+## Mybatis开发步骤
 
-1. 添加`MyBatis`坐标
+1. 添加`Mybatis`坐标
 
 2. 创建数据表
 
@@ -59,7 +59,7 @@
    </configuration>
    ```
 
-6. 调用`MyBatis`的`API`进行数据库操作
+6. 调用`Mybatis`的`API`进行数据库操作
 
    ```java
    public void test() throws Exception{
@@ -76,9 +76,9 @@
    }
    ```
 
-## MyBatis映射文件概述
+## Mybatis映射文件概述
 
-![MyBatis映射文件概述](MyBatis映射文件概述.png)
+![Mybatis映射文件概述](Mybatis映射文件概述.png)
 
 - `DTD`约束头，可以对标签的内容进行约束
 - `Mapper`
@@ -89,9 +89,9 @@
   - `resultType`：规定语句的查询结果类型（实体的全限定名），即查询以后需要封装成的目标实体
   - 标签内部：`sql`语句
 
-## MyBatis的CRUD
+## Mybatis的CRUD
 
-  `MyBatis`中，`CRUD`的`SQL`被封装到了映射文件中，在代码中我们只需要调用相应的操作，`MyBatis`会自动帮我们完成对象解析成`SQL`，和结果集封装成对象的操作
+  `Mybatis`中，`CRUD`的`SQL`被封装到了映射文件中，在代码中我们只需要调用相应的操作，`Mybatis`会自动帮我们完成对象解析成`SQL`，和结果集封装成对象的操作
 
   其中，我们通过映射文件的`xml`标签编写我们的`SQL`语句，并定好我们的`SQL`语句需要进行封装的实体类，来完成业务和`DAO`的解耦合
 
@@ -133,11 +133,11 @@
 
 - 映射文件中使用`parameterType`属性指定要插入的数据类型
 - `SQL`语句中需要使用`#{实体的属性名}`来引用实体中的属性值
-- 设计增删改的操作时需要修改数据库，默认情况下`MyBatis`的事务处于开启状态，所以在操作完成以后需要`commit`提交事务
+- 设计增删改的操作时需要修改数据库，默认情况下`Mybatis`的事务处于开启状态，所以在操作完成以后需要`commit`提交事务
 
-# MyBatis核心配置文件
+# Mybatis核心配置文件
 
-## MyBatis核心配置文件的层级关系
+## Mybatis核心配置文件的层级关系
 
 - `Configuration`：配置，**核心配置文件的根标签**
   - `properties`：属性
@@ -224,7 +224,7 @@
 
 ## properties
 
-  - 类比于`Spring`，`MyBatis`同样可以从外部加载配置文件，并通过`${key}`表达式的形式**引用**外部的配置
+  - 类比于`Spring`，`Mybatis`同样可以从外部加载配置文件，并通过`${key}`表达式的形式**引用**外部的配置
 
     ```xml
     <!-- 起别名 -->
@@ -240,7 +240,7 @@
     </select>
     ```
     
-  - 对于一些比较常见的类型，`MyBatis`已经为我们定义好了别名
+  - 对于一些比较常见的类型，`Mybatis`已经为我们定义好了别名
 
     |别名|数据类型|
     |:---:|:---:|
@@ -253,7 +253,7 @@
     
     Tips：别名的定义要定义在使用之前，一般直接跟着`properties`标签一起放在根目录内容的最上方
     
-#    MyBatis的常见API
+#    Mybatis的常见API
 
 ## SQL Session工厂构建器
   我们构建一个`SQL Sesson`工厂，需要用到工厂构建器：`SqlSessionFactoryBuilder`，而这个类常用的API有
@@ -263,7 +263,7 @@
     
     ```java
     String resource = "org/mybatis/builder/mybatis-config.xml";
-    // 该Resources是MyBatis提供给我们的一个类，它能帮助我们快捷地定位到类加载路径下的资源（maven工程则定位到resources包下），而不需要从工程的根开始读取
+    // 该Resources是Mybatis提供给我们的一个类，它能帮助我们快捷地定位到类加载路径下的资源（maven工程则定位到resources包下），而不需要从工程的根开始读取
     InputStream inputStream = Resources.getResourceAsStream(resource);
     SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
     SqlSessionFactory factory = builder.build(inputStream);
@@ -284,7 +284,7 @@
 ## Sql Session会话对象
 
   获取到了`SqlSession`对象以后，我们就可以通过这个对象，对数据库进行`CRUD`、事务等操作了，它的主要方法有：
-  
+
  ```java
  /*
   * 以下方法中的参数说明：
@@ -309,3 +309,86 @@
  // 回滚事务
  void rollback();
  ```
+
+# Mybatis的dao层实现
+
+## 传统的dao层实现方式
+
+1. 创建一个`dao`层的接口（如：`User`）
+2. 创建一个实现类，用于实现`dao`层相应的接口
+3. 在`service`层创建`dao`层对象，调用相应的方法
+
+该方法繁琐，每一次都要写接口写实现类实现某一个功能，影响开发效率
+
+## 接口代理的dao实现方式
+
+采用`Mybatis`代理的方式实现`dao`层的开发是开发的主流
+
+`Mapper`接口开发方法只需要我们编写`Mapper`接口（即：`dao`接口），，由`Mybatis`框架根据接口定义创建连接接口的动态代理对象，代理对象的方法体同上边`dao`接口实现类方法
+
+其中，`Mapper`接口开发需要遵顼以下规范：
+
+1. `Mapper.xml`文件中的`namespace`与`mapper`接口的全限定名相同
+
+2. `Mapper`接口方法名和`Mapper.xml`中定义的每个`statement`的`id`相同
+
+3. `Mapper`接口方法的输入参数类型和`Mapper.xml`中定义的每个`sql`的`parameterType`的类型相同
+
+4. `Mapper`接口方法的输出参数类型和`Mapper.xml`中定义的每个`sql`的`resultType`的类型相同
+
+   只要满足了以上的条件，我们只需要调用相应的`API`，`Mybatis`就会在实现时动态地为我们生成代理对象，来调用不同的方法，而不需要我们手动实现
+
+例：
+
+接口类：
+
+```java
+// 定义了dao方法的接口类
+public interface UserMapper{
+    // 查找所有User对象
+    List<User> findAll();
+	// 根据id查找某个User对象
+    User findById(int id);
+}
+```
+
+`xml`配置：
+
+```xml
+<!-- 映射了sql语句的配置文件 -->
+<!-- namespace应该与以上的接口的全限定名一致 -->
+<mapper namespace="com.xxx.xxx.UserMapper">
+    <!--
+		相应的sql映射的id应该和上面的接口方法名一致
+		parameterType的类型应该和方法传入的参数一致
+		resultType的类型应该和方法的返回值一致
+ 	-->
+	<select id="findAll" resultType="com.xxx.xxx.User">
+    select * from user
+    </select>
+    
+    <select id="findById" parameterType="int" resultType="com.xxx.xxx.User">
+    select * from user where id=#{id}
+    </select>
+</mapper>
+```
+
+调用：
+
+```java
+public static void main(String[] args){
+    InputStream resourceAsStream = Resources.getResourceAsStream("[以上配置文件的路径]");
+    SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
+    SqlSessionFactory factory = builder.build(resourceAsStream);
+    SqlSesion sqlSession = factory.openSession();
+    // 以上获取Session的方法都是一致的，下面是调用动态代理接口的API
+    // 该方法会根据接口和传入的xml配置文件，动态生成一个有具体方法的对象，功能实现靠xml的sql语句实现，而不需要我们重复写繁杂的实现类
+    UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+    // 调用UserMapper的方法
+    List<User> userList = userMapper.findAll();	// 获取一个存放了所有User的List
+    User user = userMapper.findById(1);	//获取id为1的User对象
+}
+```
+
+
+
