@@ -1,8 +1,0 @@
-#Git ignore list#
-/.git/
-/MySQL/powernode/
-/test/
-/target/
-*.iml
-.idea/
-Zyxxxxxi/
