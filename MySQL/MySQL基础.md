@@ -32,7 +32,7 @@
 
 - 在命令行中使用命令登录
 
-  - `mysql [-h localhost -P 3306] -u root -proot`
+  - `mysql [-h localhost -P 3306] -u <username> -p<password>`
 
     其中
 
@@ -111,14 +111,14 @@
       `phone_number`,
       `email`
     FROM
-      employees;
+      `employees`;
     # Tips：查询的字段和表中的字段顺序不一定要一致，但和结果显示的顺序一致
     
     # 3.查询表中的所有字段，在SELECT后面接个'*'即可，使用'*'查询数据将会把表中所有的数据都查询出来，按照表中的顺序显示
     SELECT
       *
     FROM
-      employees;
+      `employees`;
       
     # 4.查询常量值、表达式、函数
     
@@ -142,28 +142,28 @@
       `last_name` AS "名字",
       `age` AS "年龄"
     FROM
-      employees;
+      `employees`;
     
     # 5.2.在第一种方法的基础上，省略'AS'关键字，也可以起到起别名的效果
     SELECT 
       `lase_name` "名字",
       `age` "年龄"
     FROM
-      employees;
+      `employees`;
       
     # 6.在某些时候，我们对重复的数据可能只需要列出一次，那么我们就需要对查询的数据进行去重，使用'DISTINCT'关键字，就可以对表中查询到的数据进行去重
     SELECT DISTINCT
       `id`
     FROM
-      employees;
+      `employees`;
     
     # 7.当我们需要将多个字段的值连接在一起显示时，就可以使用'CONCAT(参数列表)'函数进行连接，然后字段的值会以字符串的形式进行拼接后显示
     SELECT
       CONCAT(`first_name`,`last_name`) AS "姓名"
     FROM
-      employees;
+      `employees`;
     
-    ```    
+    ```
     
     以上就是对表中数据的简单查询
     
@@ -175,6 +175,69 @@
     - `SQL`中的`+`会对非数字类型的数据进行类型提升，若提升成功，则按照提升后的数值进行运算，若提升失败，则给这个数值赋值为0进行运算；此外，若在运算过程中（包括任何运算，而不仅仅是加法），只要有其中一个数据的值为`NULL`那么最终的结果一定是`NULL`
     - 由于`+`不能对字符串进行拼接，所以我们要进行字段的拼接的话，就需要使用`CONCAT`函数进行拼接，`CONCAT`函数的参数列表是一个可变参数，它可以接收多个字段进行拼接
 ### 条件查询
+
+- 语法：`SELECT <查询列表> FROM <表名> WHERE <筛选条件>`
+
+- 执行顺序
+
+  1. `FROM <表名>`
+  2. `WHERE <筛选条件>`
+
+- 分类
+
+  - 按条件表达式筛选
+
+    条件运算符
+
+    - `>`：大于
+    - `<`：小于u
+    - `=`：等于
+    - `!=/<>`：不等于
+    - `>=`：大于等于
+    - `<=`：小于等于
+
+  - 按逻辑表达式筛选
+
+    逻辑运算符
+
+    - `&& / and`：与
+    - `|| / or`：或
+    - `! / not`：非
+
+  - 模糊查询
+
+    关键字
+
+    - `like`
+    - `between and`
+    - `in`
+    - `is null`
+
+#### 按条件表达式筛选
+
+例：
+
+```sql
+# 查询employees表中，salary大于12000的所有数据
+SELECT
+	*
+FROM
+	`employees`
+WHERE
+	`salary` > 12000;
+	
+# 查询department_id不等于90的员工名和部门编号
+SELECT
+	`name`,
+	`department_id`
+FROM 
+	`employees`
+WHERE
+	`department-id`<>90;
+```
+
+
+
 ### 排序查询
 ### 常见函数
 ### 分组函数
