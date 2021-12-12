@@ -498,4 +498,22 @@ public static void main(String[] args){
   </select>
   ```
 
-  
+# Mybatis核心配置文件深入
+
+## Type Handler
+
+- 在`Java`和`MySQL`中，数据的类型是不太一样的，那么在`MySQL`和`Java`之间传递数据的时候，就需要一定的类型转换，而`Mybatis`就已经提供了以下的默认类型转换
+
+  ![](./Mybatis默认类型转换器.png)
+
+- 但开发场景多，并不是什么类型都可以用以上的类型转换器的，所以我们还自定义类型转换器
+
+  自定义`TypeHandler`可以支持我们去完成一些`Mybatis`默认不支持的类型转换，具体做法如下
+
+  1. 实现`org.apache.ibatis.type.TypeHanler`接口，或者继承`org.apache.ibatis.type.BaseTypeHanler`类
+  2. 重写方法
+     - `setNonNullParameter`：`Java`设置数据到数据库的回调方法
+     - `getNullableResult`：查询时`MySQL`的字符串类型转换为`Java`的`Type`类型的方法
+  3. 将它映射到某一个`JDBC`类型
+  4. 注册到`Mybatis`核心配置文件中
+
