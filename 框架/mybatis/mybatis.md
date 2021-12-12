@@ -451,5 +451,51 @@ public static void main(String[] args){
 
 - 有些时候，我们还可能会进行大量的查询或插入，这时候我们就需要循环生成`SQL`语句了，这时候`foreach`标签就可以派上用场了，`foreach`标签会循环将我们需要的数据集（数组、链表等）拼接到`SQL`语句中
 
-- 语法：`<foreach collection="[封装数据的结构类型]" open="[开头]" close="[结尾]" item="[接收集合的每一个项]" separator>[itemValue]</foreach>`
+- 语法：`<foreach collection="[封装数据的结构类型]" open="[开头]" close="[结尾]" item="[接收集合的每一个项]" separator="[分割符]">[itemValue]</foreach>`
 
+  例如：
+
+  ```xml
+  <!-- 根据list的id获取User -->
+  <!-- 
+      首先我们先设想一下，我们所要完成的需求是不是想以下这样的:
+        <select id="findByIds" parameterType="list" resultType="xxx.xxx.User">
+            SELECT * FROM `user` WHERE `id` IN({list里的值})
+        </select>
+      但由于list的值是动态的，所以我们不能写死在配置文件中，必须要动态地载入sql语句中，所以就引入了foreach标签，结合where标签的用法，就变成以下这样
+  -->
+  <select id="findByIds" parameterType="list" resultType="xxx.xxx.User">
+  	SELECT * FROM `user`
+      <where>
+      	<foreach collection="list" open="IN(" close=")" item="id" separator=",">
+          	#{id}
+          </foreach>
+      </where>
+  </select>
+  ```
+  
+  
+
+### SQL语句的抽取
+
+- 为了`SQL`语句的复用，我们可以将相同部分的`SQL`语句进行抽取，然后对`SQL`片段进行引用，这样我们的`SQL`就可以进行复用，更便于维护
+
+- 语法：`<sql id="selectUser">[需要抽取的SQL语句]</sql>`
+
+  例如：
+
+  ```xml
+  <!-- 如在前几个例子中，我们就可以抽取对user表查询的SQL语句的前半部分 -->
+  <sql id="selectUser">SELECT * FROM `user`</sql>
+  <!-- 引用上述标签 -->
+  <select id="findByIds" parameterType="list" ></select></se>resultType="xxx.xxx.User">
+  	<include refid="selectUser"
+      <where>
+      	<foreach collection="list" open="IN(" close=")" item="id" separator=",">
+          	#{id}
+          </foreach>
+      </where>
+  </select>
+  ```
+
+  
