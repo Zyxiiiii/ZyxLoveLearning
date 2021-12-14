@@ -139,6 +139,33 @@
 
 # Mybatis核心配置文件
 
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <properties resource="jdbc.properties"/>
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+      </dataSource>
+    </environment>
+  </environments>
+  
+  <mappers>
+    <mapper resource=""/>
+  </mappers>
+</configuration>
+```
+
+
+
 ## Mybatis核心配置文件的层级关系
 
 - `Configuration`：配置，**核心配置文件的根标签**
@@ -229,19 +256,27 @@
   - 类比于`Spring`，`Mybatis`同样可以从外部加载配置文件，并通过`${key}`表达式的形式**引用**外部的配置
 
     ```xml
-    <!-- 起别名 -->
-    <typeAliases>
-      <typeAlias type="xxx.xxx.User" alias="user"></typeAlias>
-    </typeAliases>
-    
-    <!--
-      在完成了起别名以后，我们再调用这个类时，就可以不必用这个类的全限定名，而是通过别名对类进行引用
-    -->
-    <select id="findAll" resultType="user">
-      SELECT * FROM `user`
-    </select>
+    <properties resource
     ```
+
     
+
+### 给类取别名
+
+```xml
+<!-- 起别名 -->
+<typeAliases>
+  <typeAlias type="xxx.xxx.User" alias="user"></typeAlias>
+</typeAliases>
+
+<!--
+  在完成了起别名以后，我们再调用这个类时，就可以不必用这个类的全限定名，而是通过别名对类进行引用
+-->
+<select id="findAll" resultType="user">
+  SELECT * FROM `user`
+</select>
+```
+
   - 对于一些比较常见的类型，`Mybatis`已经为我们定义好了别名
 
     |别名|数据类型|
@@ -252,9 +287,10 @@
     |`double`|`Double`|
     |`boolean`|`Boolean`|
     |...|...|
-    
+
     Tips：别名的定义要定义在使用之前，一般直接跟着`properties`标签一起放在根目录内容的最上方
-    
+
+
 #    Mybatis的常见API
 
 ## SQL Session工厂构建器
