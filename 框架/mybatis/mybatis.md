@@ -453,3 +453,17 @@ public static void main(String[] args){
 
 - 语法：`<foreach collection="[封装数据的结构类型]" open="[开头]" close="[结尾]" item="[接收集合的每一个项]" separator>[itemValue]</foreach>`
 
+  如：
+
+  ```xml
+  <!-- 从user表中查询id在集合L中的数据 -->
+  <select id="findInList" parameterType="list" resultType="list">
+  	SELECT * FROM `user` WHERE `id` IN('<该集合的数据>')
+  	<!--
+  		以上是预想的实现方案，但由于集合的数据是动态的，我们不能写死在xml中，而是要动态生成，这时候我们就可以用上foreach标签，来利用一个循环动态的拼接集合的每一个元素
+  	-->
+  </select>
+  ```
+
+  
+
