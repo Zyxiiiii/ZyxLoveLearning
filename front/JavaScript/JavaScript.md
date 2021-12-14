@@ -1,3 +1,5 @@
+[TOC]
+
 #  JavaScript 简介
 
 ## 为什么学 JavaScript 

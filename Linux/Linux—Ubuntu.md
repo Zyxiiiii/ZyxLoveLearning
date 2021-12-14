@@ -1,3 +1,5 @@
+[TOC]
+
 # Ubuntu的安装（略）
 
 # 用户权限
@@ -13,7 +15,7 @@
 # APT软件包管理
 
   `APT`是一款安装包管理工具。在Ubuntu下，我们可以使用`apt`命令来进行软件包的安装（类似于`Windows`的软件管理工具）
-  
+
   * `APT`软件获取原理：
     和`YUM`类似，`APT`在运行时也会连接到软件仓库去获取相应的软件包，配置软件仓库地址的文件在`/etc/apt/source.list`*（默认指定了官方的软件地址位于美国，连接速度比较慢）*
   
@@ -38,7 +40,7 @@
 # SSH远程登录Ubuntu
 
   由于`Ubuntu`上并没有自带`SSH`，所以我们要先安装并启动这个服务，才能使用`XShell5`远程登录到`Ubuntu`
-  
+
   1. 安装`SSH`服务（包括服务端和客户端）：`sudo apt-get install openssh-server`
   2. 启用`sshd`服务（监听22号端口）：`service sshd restart`
 
@@ -48,5 +50,5 @@
   2. `ssh 用户名@IP地址`：使用`SSH`远程连接到`Linux`服务机
 
   Tips：如出现错误，查看是否有`~/.ssh/known_ssh`，尝试删除该文件解决
-  
+
   * 远程登出：`exit`或`logout`指令

@@ -1,3 +1,5 @@
+[TOC]
+
 # MySQL
 
 ## 什么是MySQL？

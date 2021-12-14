@@ -1,3 +1,5 @@
+[TOC]
+
 # HTML
 
 HTML（Hyper Text Markup Languege）是一种超文本标记语言，HTML由大量的标签组成，每一个标签都有开始标签和结束标签。

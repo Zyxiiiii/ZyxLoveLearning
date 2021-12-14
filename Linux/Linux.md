@@ -1,3 +1,5 @@
+[TOC]
+
 # 安装CentOS（略）
 
 * `CentOS`

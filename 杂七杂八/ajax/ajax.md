@@ -1,3 +1,5 @@
+[TOC]
+
 # Ajax
 
 要使用Ajax，需要使用浏览器内置的XMLHttpRequest对象，以下是获取这个对象的方法。
