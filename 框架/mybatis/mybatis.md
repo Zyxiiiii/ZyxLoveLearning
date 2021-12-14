@@ -451,7 +451,71 @@ public static void main(String[] args){
 
 - 有些时候，我们还可能会进行大量的查询或插入，这时候我们就需要循环生成`SQL`语句了，这时候`foreach`标签就可以派上用场了，`foreach`标签会循环将我们需要的数据集（数组、链表等）拼接到`SQL`语句中
 
-- 语法：`<foreach collection="[封装数据的结构类型]" open="[开头]" close="[结尾]" item="[接收集合的每一个项]" separator>[itemValue]</foreach>`
+- 语法：`<foreach collection="[封装数据的结构类型]" open="[开头]" close="[结尾]" item="[接收集合的每一个项]" separator="[分割符]">[itemValue]</foreach>`
+
+  例如：
+
+  ```xml
+  <!-- 根据list的id获取User -->
+  <!-- 
+      首先我们先设想一下，我们所要完成的需求是不是想以下这样的:
+        <select id="findByIds" parameterType="list" resultType="xxx.xxx.User">
+            SELECT * FROM `user` WHERE `id` IN({list里的值})
+        </select>
+      但由于list的值是动态的，所以我们不能写死在配置文件中，必须要动态地载入sql语句中，所以就引入了foreach标签，结合where标签的用法，就变成以下这样
+  -->
+  <select id="findByIds" parameterType="list" resultType="xxx.xxx.User">
+  	SELECT * FROM `user`
+      <where>
+      	<foreach collection="list" open="IN(" close=")" item="id" separator=",">
+          	#{id}
+          </foreach>
+      </where>
+  </select>
+  ```
+  
+  
+
+### SQL语句的抽取
+
+- 为了`SQL`语句的复用，我们可以将相同部分的`SQL`语句进行抽取，然后对`SQL`片段进行引用，这样我们的`SQL`就可以进行复用，更便于维护
+
+- 语法：`<sql id="selectUser">[需要抽取的SQL语句]</sql>`
+
+  例如：
+
+  ```xml
+  <!-- 如在前几个例子中，我们就可以抽取对user表查询的SQL语句的前半部分 -->
+  <sql id="selectUser">SELECT * FROM `user`</sql>
+  <!-- 引用上述标签 -->
+  <select id="findByIds" parameterType="list" ></select></se>resultType="xxx.xxx.User">
+  	<include refid="selectUser"
+      <where>
+      	<foreach collection="list" open="IN(" close=")" item="id" separator=",">
+          	#{id}
+          </foreach>
+      </where>
+  </select>
+  ```
+
+# Mybatis核心配置文件深入
+
+## Type Handler
+
+- 在`Java`和`MySQL`中，数据的类型是不太一样的，那么在`MySQL`和`Java`之间传递数据的时候，就需要一定的类型转换，而`Mybatis`就已经提供了以下的默认类型转换
+
+  ![](./Mybatis默认类型转换器.png)
+
+- 但开发场景多，并不是什么类型都可以用以上的类型转换器的，所以我们还自定义类型转换器
+
+  自定义`TypeHandler`可以支持我们去完成一些`Mybatis`默认不支持的类型转换，具体做法如下
+
+  1. 实现`org.apache.ibatis.type.TypeHanler`接口，或者继承`org.apache.ibatis.type.BaseTypeHanler`类
+  2. 重写方法
+     - `setNonNullParameter`：`Java`设置数据到数据库的回调方法
+     - `getNullableResult`：查询时`MySQL`的字符串类型转换为`Java`的`Type`类型的方法
+  3. 将它映射到某一个`JDBC`类型
+  4. 注册到`Mybatis`核心配置文件中
 
   如：
 
