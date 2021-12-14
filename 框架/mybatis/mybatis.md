@@ -256,7 +256,7 @@
   - 类比于`Spring`，`Mybatis`同样可以从外部加载配置文件，并通过`${key}`表达式的形式**引用**外部的配置
 
     ```xml
-    <properties resource
+    <properties resource="[资源路径名]"/>
     ```
 
     
@@ -264,7 +264,7 @@
 ### 给类取别名
 
 ```xml
-<!-- 起别名 -->
+<!-- 起别名，需要在核心配置文件配置 -->
 <typeAliases>
   <typeAlias type="xxx.xxx.User" alias="user"></typeAlias>
 </typeAliases>
@@ -391,6 +391,20 @@ public interface UserMapper{
 ```
 
 `xml`配置：
+
+`mapper`的`dtd`头
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper>
+    
+</mapper>
+```
+
+
 
 ```xml
 <!-- 映射了sql语句的配置文件 -->
@@ -526,8 +540,8 @@ public static void main(String[] args){
   <!-- 如在前几个例子中，我们就可以抽取对user表查询的SQL语句的前半部分 -->
   <sql id="selectUser">SELECT * FROM `user`</sql>
   <!-- 引用上述标签 -->
-  <select id="findByIds" parameterType="list" ></select></se>resultType="xxx.xxx.User">
-  	<include refid="selectUser"
+  <select id="findByIds" parameterType="list" resultType="xxx.xxx.User">
+  	<include refid="selectUser"/>
       <where>
       	<foreach collection="list" open="IN(" close=")" item="id" separator=",">
           	#{id}
