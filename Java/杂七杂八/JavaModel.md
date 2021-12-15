@@ -1,4 +1,4 @@
-# 深入理解 DAO，DTO，DO，VO，AO，BO，POJO，PO，Entity，Model，View的概念
+# 各类JavaModel
 
 - DAO （Data Access Object）数据访问对象
 - DTO（Data Transfer Object）数据传输对象
