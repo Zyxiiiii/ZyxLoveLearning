@@ -713,3 +713,63 @@ public static void main(String[] args){
 |   `One`   |         一对一结果集的封装         |
 |  `Many`   |          一对多结果集封装          |
 
+  - 上述注解中，`Insert`、`Update`、`Delete`、`Select`注解的内容主要是我们用于查询的`SQL`语句，例如：``@Select("SELECT * FROM ` user`")``，用法较简单，只需要将`XML`中的内容配置到这里即可
+    
+    但由于我们没有在核心配置文件中配置这个关系，所以这时候`Mybatis`还不知道这是我们给定的`SQL`关系。因此我们需要在核心配置文件中将注解注册到`Mybatis`中。
+    
+    ```xml
+    <mappers>
+      <!-- 指定接口所在的包，Mybatis会自动扫描包下的类的接口上的注解 -->
+      <package name="[mapper接口所在的包]"/>
+    </mappers>
+    ```
+    
+  - `Result`、`Results`、`One`、`Many`都是用于实体属性封装的注解
+    - `Results`：用于告诉`Mybatis`，这是我们需要封装的自定义规则
+    - `Result`：放在`Results`内部，给每一个属性构建与结果集字段的映射
+      - `id`：通过一个指定`false/true`判断这个字段是不是一个`id`
+      - `column`：指定需要封装的字段名
+      - `property`：指定需要封装的属性名
+      - `javaType`：指定该属性对应的实体类型
+      - `one`：当需要联表查询时，表的一对一的映射关系可以用这个属性，其后就跟一个`One`注解，里面指定了对应的属性需要用到的封装规则
+      - `many`：类似一对一，这里主要用于一对多的映射
+    - `One`：放在`Result`体内，用于引用相应的属性需要用到的查询的方法，即引用该实体属性自己的查询方法，`Mybatis`会调用该方法对应的规则对该实体进行封装
+    - `Many`：类似一对一，还可以用于多对多的映射
+      
+      一对多、一对多、多对多主要的区别体现在`SQL`语句的不同和实现的逻辑，在`Mybatis`中的配置思路没有大的区别
+    
+    例如：
+    
+    ```java
+    @Select("SELECT * FROM `orders`")
+    @Results({
+      // 普通的属性和字段类型的映射的封装
+      // @Result(column = "[待封装的字段名]", property = "[待封装的属性名]")
+      @Result(column = "id", property = "id"),
+      @Result(column = "ordertime", property = "ordertime"),
+      @Result(column = "total", property = "total"),
+      // 以下是利用One对一对一联表查询的实体属性进行封装，可以简化联表查询的开发步骤，避免复杂的SQL语句
+      @Result(
+        // 待封装的属性名
+        property = "user",
+        // 待封装的字段名
+        column = "uid",
+        // 待封装的属性对应的Java类型
+        javaType = User.class,
+        // 指定对应的查询方法，Mybatis会根据这个方法的注解来对这个实体属性进行封装
+        one = @One(select = "com.xxx.xxx.UserMapper.findById")
+      )
+    })
+    public List<Order> findAll();
+    
+    // 以下是一对多...
+    @Results(
+      @Result(
+        // 此处省略property、column和javaType
+        // many属性
+        many = @Many(select = "[该属性引用的方法的全限定名]")
+      )
+    )
+    ```
+    
+    Tips：`Mybatis`中的注解开发把`SQL`语句嵌在了源码之中，最佳实践是利用`XML`和注解结合使用，简单的`SQL`用注解提高效率，复杂的`SQL`和逻辑需要灵活度较高的还是建议抽离成`XML`配置
