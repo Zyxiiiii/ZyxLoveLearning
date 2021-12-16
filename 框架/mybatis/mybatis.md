@@ -688,5 +688,28 @@ public static void main(String[] args){
 </resultMap>
 ```
 
+## 小结
 
+- `Mybatis`多表配置主要使用的是`resultMap`标签，根据实际的业务需求，分为以下几类
+
+  - 一对一：`<resultMap>`
+  - 一对多：`<resultMap>` + `<collection>`
+  - 多对多：`<resultMap>` + `<collection>`
+
+  一对多和多对多的配置区别主要体现在`SQL`语句的不同
+
+# Mybatis注解开发
+
+`Mybatis`常见的注解有以下这些
+
+|   注解    |                说明                |
+| :-------: | :--------------------------------: |
+| `Insert`  |              插入数据              |
+| `Update`  |              更新数据              |
+| `Delete`  |              删除数据              |
+| `Select`  |              查询数据              |
+| `Result`  |      对查询到的结果集进行封装      |
+| `Results` | 和`Result`一起使用，封装多个结果集 |
+|   `One`   |         一对一结果集的封装         |
+|  `Many`   |          一对多结果集封装          |
 
