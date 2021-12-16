@@ -552,6 +552,8 @@ public static void main(String[] args){
 
 # Mybatis核心配置文件深入
 
+在之前已经有一部分标签已经接触过（如`properties`、`TypeAliases`、`environments`），这里不再过多赘述
+
 ## Type Handler
 
 - 在`Java`和`MySQL`中，数据的类型是不太一样的，那么在`MySQL`和`Java`之间传递数据的时候，就需要一定的类型转换，而`Mybatis`就已经提供了以下的默认类型转换
@@ -562,7 +564,7 @@ public static void main(String[] args){
 
   自定义`TypeHandler`可以支持我们去完成一些`Mybatis`默认不支持的类型转换，具体做法如下
 
-  1. 实现`org.apache.ibatis.type.TypeHanler`接口，或者继承`org.apache.ibatis.type.BaseTypeHanler`类
+  1. 实现`org.apache.ibatis.type.TypeHanler`接口，或者继承`org.apache.ibatis.type.BaseTypeHanler`类（给定转换结果的类作为泛型）
   2. 重写方法
      - `setNonNullParameter`：`Java`设置数据到数据库的回调方法
      - `getNullableResult`：查询时`MySQL`的字符串类型转换为`Java`的`Type`类型的方法
@@ -571,15 +573,120 @@ public static void main(String[] args){
 
   如：
 
+  编写`myDateHandler`类型处理器
+  
+  ```java
+  public class DateTypeHandler extends BaseTypeHandler<Date>{
+      // 将Java类型转换成数据库的类型
+      public void setNonNullParameter(PrepareStatement prepareStatement, int i, Date date JdbcType jdbcType) throws SQLException{
+          long time = date.getTime();
+          prepareStatement.setString(i, time);        
+      }
+      // 以下均为数据库类型转换为Java类型
+      // @param s 要转换的字段名称
+      // @param resultSet 查询出的结果集
+      public Date getNullableResult(ResultSet resultSet, String s) throws SQLException{
+          long time = resultSet.getLong(s);
+          return new Date(time);
+      }
+      
+      public Date getNullableResult(ResultSet resultSet, int i) throws SQLException{
+          long time = resultSet.getLong(i);
+          return new Date(time);
+      }
+      
+      public Date getNullableResult(CallableStatement callableStatement, int i) throws SQLException{
+          long time = callableStatement.getLong(i);
+          return new Date(time);
+      }
+  }
+  ```
+  
+  注册到`Mybatis`核心配置中
+  
   ```xml
-  <!-- 从user表中查询id在集合L中的数据 -->
-  <select id="findInList" parameterType="list" resultType="list">
-  	SELECT * FROM `user` WHERE `id` IN('<该集合的数据>')
-  	<!--
-  		以上是预想的实现方案，但由于集合的数据是动态的，我们不能写死在xml中，而是要动态生成，这时候我们就可以用上foreach标签，来利用一个循环动态的拼接集合的每一个元素
-  	-->
-  </select>
+  <typeHandlers>
+  	<typeHandler handler="com.xxx.xxx.DateTypeHandler"></typeHandler>
+  </typeHandlers>
+  ```
+  
+  
+
+## plugins
+
+`Mybatis`可以通过`plugins`标签来引入第三方的插件来对功能进行扩展，分页助手`PageHelper`是将分页的复杂操作进行封装，使用简单的方式即可获得分页的相关数据
+
+开发步骤
+
+以分页助手`PageHelper`为例
+
+- 导入通用的`PageHandler`的坐标
+
+  ```xml
+  <!-- 分页助手 -->
+  <dependency>
+  	<groupId>com.github.pageHelper</groupId>
+      <artifactId>pageHelper</artifactId>
+      <version></version>
+  </dependency>
+  <!-- 解析器 -->
+  <dependency>
+  	<groupId>com.github.jsqlparser</groupId>
+      <artifactId>jsqlparser</artifactId>
+      <version></version>
+  </dependency>
   ```
 
-  
+- 在`Mybatis`核心配置文件中配置`PageHandler`插件
+
+  ```xml
+  <!-- 配置分页助手 -->
+  <plugins>
+  	<plugin interceptor="com.github.pageHelper.PageHelper">
+          <!-- 需不需要参数视具体插件而定 -->
+      	<property name="dialect" value="mysql"></property>
+      </plugin>
+  </plugins>
+  ```
+
+# Mybatis的多表操作
+
+在实际开发过程中，我们不可避免的要对多个数据库表进行操作，例如，当我们做一个订餐的网页时，查询订单信息时需要将用户信息一并查出来
+
+利用`select`标签的`resultMap`属性值，和`resultMap`标签对实体进行映射关系的编写，使得`Mybatis`可以对该实体进行我们想要的封装
+
+例：
+
+```xml
+<resultMap id="orderMap" type="order">
+    <!--
+		手动指定数据库表字段与实体属性的关系
+			column:字段名
+			property:实体的属性名
+			Tips:主键有一个单独的标签——id
+	-->
+    <id colume="[字段名]" property="[实体属性名]"></id>
+    <result column="[字段名]" property="[实体属性名]"></result>
+    
+    <!-- 
+		Tips：若实体的属性是一个实体，可以通过.的方式给该实体的属性进行映射
+			如：order实体内部封装了user实体用于存储用户信息，则可以通过以下方式来对user进行映射
+ 	-->
+    <result column="username" property="user.username"></result>
+    
+    <!-- 此外，还有一个标签association可以帮助我们完成这种类型的映射 -->
+    <association property="user" javaType="user">
+    	<id column="[字段名]" property="[属性名]"></id>
+        <result column="[字段名]" property="[属性名]"></result>
+    </association>
+    
+    <!-- 如果属性是一个集合，则需要使用collection标签 -->
+    <collection property="[集合的属性名]" ofType="[集合里封装的Java类型]">
+    	<!-- 以下部分与上述的普通字段封装一致 -->
+        <result column="[字段名]" property="[属性名]"></result>
+    </collection>
+</resultMap>
+```
+
+
 
