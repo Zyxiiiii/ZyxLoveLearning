@@ -40,7 +40,7 @@ int main()
 
 * #define 常量名 常量值;	例：`#define DAY 7`
 
-## `const`修饰的变量
+## const修饰的变量
 
 * `const` 变量类型 变量名 = 变量值；	例：`const int MONTH = 12;`
 
@@ -889,15 +889,214 @@ int main()
 - `this`指针的作用
 
   - 当形参和成员变量名相同时，可以使用`this`指针来区分
+  
   - 当类的函数中需要返回对象本身时，可以使用`return *this`
+  
+    Tips：当返回的是该对象本身时，一般需要用一个引用来接收这个变量
+  
+    若直接返回值，则返回的不是这个对象本身，而是这个对象的一个**拷贝**
+  
+    ```cpp
+    Person& PersonAddAge(Person p)
+    {
+        // 根据定义，this是指向该对象的指针，则可以利用 `->` 来指向该对象的成员 
+        this->age = this->age + p.age;
+        // 此外，还可以直接解引用得到该对象本身
+        return *this;
+    }
+    ```
+  
+  - 为了更直观的表现究竟是成员还是参数，建议在引用成员的时候都使用`this`指针
 
+### 空指针访问成员函数
 
+- 在`C++`，空指针是可以调用成员函数的，但是要注意有没有用到`this`指针
+
+  空指针可以访问成员中没有使用成员变量的函数，但是如果该函数使用了成员变量，则会报空指针异常
+
+- 如果使用到了`this`指针，需要加以判断来保证代码的健壮性
+
+  在使用了成员变量的函数体内部，添加一个条件，只有当`this`指针不为空时，函数才能正常执行，这样就保证了我们的函数不会出现空指针异常
+
+  ```c++
+  class Person
+  {
+      int age;
+      
+  public:
+      void ShowClass()
+      {
+          std::cout << "im a class" << std::endl;
+      }
+      
+      void GrowUp()
+      {
+          age++;
+      }
+  };
+  
+  void test1()
+  {
+      // 创建一个空的Person对象，并调用它的方法
+      Person p = NULL;
+      
+      // 该方法体内部没有调用该对象相关的属性，所以没有调用该对象本身的this指针，函数可以正常执行
+      p.ShowClass();
+      
+      // 由于该对象为空，调用其本身的属性相当于调用了该对象的this指针，那么一个空对象自然不存在属性，所以会抛出空指针异常
+      p.GrowUp();
+  }
+  
+  // 为了防止由于空对象调用函数导致的空指针异常，我们可以将上述类的GrowUp函数改成以下这样
+  // 类定义省略
+  void GrowUp()
+  {
+      if(this == NULL)
+      {
+          return;
+      }
+      
+      age++;
+  }
+  ```
+
+  
+
+### const关键字修饰成员函数
+
+- 常函数
+
+  - 使用了`const`关键字修饰的函数我们称之为常函数
+  - 常函数不可以修改成员属性
+  - 成员属性声明时添加了关键字`mutable`后，就可以在常函数中进行修改
+
+      ```c++
+      class Person
+      {
+          int m_A;
+          
+          mutable int m_B;
+          
+      public:
+          void Test1() const
+          {
+              // 改该行代码会报错，由于该函数被const修饰，为常函数，则不能在该函数体内部修改成员变量的值
+              this->m_A = 100; // 报错
+              
+              // 但是，如果想要让常函数可以修改成员的值，可以给成员添加一个mutable关键字，使该成员在常函数内部也是可修改的左值
+              this->m_B = 100; // 不报错
+          }
+          
+          void Test2()
+          {
+              // 该函数为普通函数，不报错
+              this->m_A = 100;
+          }
+      };
+      ```
+
+  常函数的本质：
+
+  - 常函数在函数定义后面添加一个`const`关键字修饰，其实际上相当于给该函数对应的`this`指针添加了`const`修饰，使得该`this`指针成为了一个**常量指针**，那么**它所指向的就会变成了一个常量，它指向的值不允许被修改**
+
+- 常对象
+
+  - 声明对象前添加`const`修饰则称该对象为常对象
+  - 常对象**只能调用常函数**
+  
+  常对象实际上相当于在实例化的时候就给`this`指针添加了`const`限定，此时不允许修改普通成员变量的值，但是可以修改使用了`mutable`关键字修饰的成员变量
+  
+  ```c++
+  // 还是上面那个类，略
+  void Test()
+  {
+      const Person p;
+      // 报错，表达式必须是可修改的左值
+      p.m_A = 100;
+      // 通过，常对象可以修改mutable关键字修饰的成员变量
+      p.m_B = 100;
+      
+      // 通过，常对象可以调用常函数
+      p.Test1();
+      // 报错，常对象不能调用普通函数
+      p.Test2();
+  }
+  ```
+
+### 友元
+
+- 在面向对象的语言中，**私有属性想让通过允许类外的一些函数或者类进行访问**的话，就需要用到**友元**的技术
+
+- 目的：允许一些类和函数访问该类的私有成员
+
+- 关键字：`friend`
+
+  全局函数作友元：
+
+  ```c++
+  class Building
+  {
+      
+      // 以下这行代码取消注释以后，GoodFriend函数就可以访问到m_Bedroom变量了
+      // friend void GoodFriend(Building *building);
+      
+  public:
+      Building()
+      {
+          // 可以让所有人访问
+          m_SittingRoom = "客厅";
+          // 不希望所有人访问
+          m_Bedroom = "卧室";
+      }
+      
+      string m_SittingRoom;
+  private:
+      string m_Bedroom;
+  };
+  
+  void GoodFriend(Building *building)
+  {
+      // 公有变量，不报错
+      std::cout << building->m_SittingRoom << std::endl;
+      // 私有变量，直接访问会报错，需要在类内声明友元
+      std::cout << building->m_Bedroom << std::endl;
+  }
+  ```
+
+  类作友元：类比与函数作友元， 在相应的类内声明允许访问本类的另一个类加上`friend`关键字即可
+
+  例：
+
+  ```c++
+  class Building
+  {
+      // 这行代码即可将Friend添加为Building的友元
+  	friend class Friend;
+  };
+  
+  class Friend(){};
+  ```
+
+  成员函数作友元：略，以代码为例
+
+  ```c++
+  class Building
+  {
+      // 这行代码即可将Friend中的Test函数添加为Building的友元
+  	friend void Friend::Test;
+  };
+  
+  class Friend()
+  {
+      void Test(){}
+  };
+  ```
 
 ### struct和class的区别
 
-  在`C++`中，`struct`和`class`唯一的区别就在于**默认的访问权限不同**
+在`C++`中，`struct`和`class`唯一的区别就在于**默认的访问权限不同**
 
-  区别：
+区别：
   - `struct`的默认访问权限为`public`
   - `class`默认的访问权限为`private`
 
