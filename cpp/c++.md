@@ -1100,3 +1100,48 @@ int main()
   - `struct`的默认访问权限为`public`
   - `class`默认的访问权限为`private`
 
+# 运算符重载
+
+- 运算符重载：对已有的运算符进行重新定义，赋予其另一种功能，以适应不同的数据类型
+
+## 加号运算符重载
+
+- 以成员函数的形式完成重载
+
+  通过实现编译器给定的函数名：`operator+`，就可以完成加号运算符的重载，完成了加号运算符重载以后的类对象之间可以根据我们自定义的规则进行**加法运算**
+
+  例如：
+
+  ```c++
+  // Person类内部
+  Person operator+(Person &p)
+  {
+      Person temp;
+      temp.m_A = this->m_A + p.m_A;
+      return temp;
+  }
+  
+  // 则在调用这个方法时，不需要使用operator+进行调用，而是可以直接使用+对他们进行加和，相当于调用了operator+这个函数
+  // 调用了p1.operator+(p2)，并赋值给p3
+  Person p3 = p1 + p2;
+  ```
+
+- 以全局函数的形式完成重载
+
+  ```c++
+  // 不在Person类内部
+  Person operator+(Person &p1, Person &p2)
+  {
+      Person temp;
+      temp.m_A = p1.m_A + p2.m_A;
+      return temp;
+  }
+  ```
+
+- 总结：
+
+  - 内置数据类型的表达式是不可发生改变的
+  - 不要滥用运算符重载
+
+## 重载左移运算符
+
