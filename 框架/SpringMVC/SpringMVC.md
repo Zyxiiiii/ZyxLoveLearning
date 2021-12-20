@@ -592,3 +592,33 @@ suffix = ""; // 视图名称后缀
   1. 创建拦截器类实现`HandlerInterceptor`接口
   2. 配置拦截器
   3. 测试拦截器的拦截效果
+
+# 总结
+
+`mvc`中，需要配置的内容如下
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+">
+
+    <!-- 组件扫描 -->
+
+    <!-- 注解驱动 -->
+
+    <!-- 视图解析器 -->
+    
+    <!-- 开放静态资源 -->
+    
+</beans>
+```
+
