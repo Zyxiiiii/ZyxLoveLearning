@@ -70,15 +70,14 @@
   <configuration>
       <!--
           自定义日志输出格式的格式占位符：
-              %-5 Level
-              %d{yyyy-MM-dd HH:mm:ss.
-              SSS}日期
-              %c类的完整名称
-              %M为method
-              %L为行号
-              %thread线程名称
-              %m或者%msg为信息
-              %换行
+              %-5level 输出级别(-5表示对齐为5位字符)
+              %d{yyyy-MM-dd HH:mm:ss.SSS} 日期(年-月-日 时-分-秒-毫秒)
+              %c 类的完整名称
+              %M 为方法名
+              %L 为行号
+              %thread 线程名称
+              %m或者%msg 为信息
+              %n 换行
       -->
   	<property name="pattern" value="<自定义输出的格式>"></property>
       <!-- 配置为控制台输出 -->
