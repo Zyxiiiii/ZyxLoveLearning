@@ -236,3 +236,26 @@
 
   :arrow_up:以上两种方式都可以成功调用相应的切点表达式
 
+# Spring AOP需要的Maven坐标
+
+```xml
+<!-- aspectj weaver -->
+<dependency>
+    <groupId>org.aspectj</groupId>
+    <artifactId>aspectjweaver</artifactId>
+    <version>${aspectj}</version>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>org.aspectj</groupId>
+    <artifactId>aspectjrt</artifactId>
+    <version>${aspectj}</version>
+</dependency>
+<dependency>
+    <groupId>org.aspectj</groupId>
+    <artifactId>aspectjtools</artifactId>
+    <version>${aspectj}</version>
+</dependency>
+<!-- spring-core、spring-context和spring-aop略 -->
+```
+
