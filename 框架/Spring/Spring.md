@@ -552,6 +552,12 @@ Tips：在获取`ApplicationContext`对象时，获取的`xml`文件名是写死
         <artifactId>spring-test</artifactId>
         <version>${maven.spring.version}</version>
     </dependency>
+    <!-- spring-aop -->
+	<dependency>
+    	<groupId>org.springframework</groupId>
+	    <artifactId>spring-aop</artifactId>
+    	<version>${maven.spring.version}</version>
+	</dependency>
 </dependencies>
 ```
 
