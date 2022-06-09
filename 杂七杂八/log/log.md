@@ -89,6 +89,13 @@
           	<pattern>${pattern}</pattern>
           </encoder>
       </appender>
+      <!-- 文件输出 -->
+      <appender name="file" class="ch.qos.logback.core.FileAppender">
+          <file>${path}ChatSystem.log</file>
+          <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+              <pattern>${pattern2}</pattern>
+          </encoder>
+      </appender>
       <root level="ALL">
       	<appender-ref ref="console"></appender-ref>
       </root>
